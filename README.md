@@ -1,4 +1,4 @@
-# MoreHomes
+# MoreHomes - Unturned Plugin
 * Allows players to have multiple beds
 * You can set the delay of teleportation
 * Manage max amount of homes by creating permissions
