@@ -3,6 +3,17 @@
 * You can set the delay of teleportation
 * Manage max amount of homes by creating permissions
 
+## Instalation
+Download the latest plugin release from [here](https://github.com/RestoreMonarchy/MoreHomes/releases/)  
+**Libraries:** 0Harmony, uDB and LiteDB  
+*Special thanks to [Void](https://steamcommunity.com/profiles/76561194107500974) for uDB!*
+
+## Commands
+**/home** - Teleports you to your first bed  
+**/home [name]** - Teleports you to the selected be  
+**/homes** - Prints all your beds to the chat  
+**/renamehome [oldName] [newName]** - Renames your bed
+
 ## Default Configuration
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -35,3 +46,5 @@
   <Translation Id="command_rename_success" Value="Successfully renamed {0} to {1}!" />
 </Translations>
 ```
+## Support
+If you need any help installing or setting up the plugin, be sure to join my Discord https://discord.gg/dCHkuxS
