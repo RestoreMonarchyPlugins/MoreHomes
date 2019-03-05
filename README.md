@@ -10,7 +10,7 @@ Download the latest plugin release from [here](https://github.com/RestoreMonarch
 
 ## Commands
 **/home** - Teleports you to your first bed  
-**/home [name]** - Teleports you to the selected be  
+**/home [name]** - Teleports you to the selected bed 
 **/homes** - Prints all your beds to the chat  
 **/renamehome [oldName] [newName]** - Renames your bed
 
