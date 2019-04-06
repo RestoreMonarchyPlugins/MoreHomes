@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using Rocket.Unturned.Skills;
 
 namespace MoreHomes.Commands
 {
@@ -60,15 +61,11 @@ namespace MoreHomes.Commands
             {
                 UnturnedChat.Say(caller, U.Translate("command_generic_teleport_while_driving_error", new object[0]));
                 throw new WrongUsageOfCommandException(caller, this);
-            }
-
-            if (command.Count() == 0)
+            } else if (!BarricadeManager.tryGetBed(unturnedPlayer.CSteamID, out position, out angle))
             {
-                if (!BarricadeManager.tryGetBed(unturnedPlayer.CSteamID, out position, out angle))
-                {
-                    UnturnedChat.Say(caller, String.Format(MoreHomes.Instance.Translate("command_home_not_found"), command[0]), Color.red);
-                }
-            } else
+                UnturnedChat.Say(caller, String.Format(MoreHomes.Instance.Translate("command_home_not_found"), command[0]), Color.red);
+                return;
+            } else if (command.Count() == 1)
             {
                 string sPosition = Database.GetBed(unturnedPlayer.CSteamID, command[0]);
                 if (sPosition == "null")
@@ -87,7 +84,7 @@ namespace MoreHomes.Commands
 
             })){
                 IsBackground = true
-            }.Start();
+            }.Start();  
 
 
         }

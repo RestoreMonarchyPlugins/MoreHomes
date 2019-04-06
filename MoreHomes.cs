@@ -23,7 +23,7 @@ namespace MoreHomes
             Instance = this;
 
             Logger.LogWarning("MoreHomes by MCrow");
-            Logger.LogWarning("Version 1.0 - BETA");
+            Logger.LogWarning("Version 1.1 - BETA");
             Logger.LogWarning("If you didn't get this plugin from MCrow himself, please report it to admin@restoremonarchy.com");
             Logger.LogWarning("Remmember to always save the world before restart!");
             Logger.LogWarning("Made using Harmony and LiteDB");
