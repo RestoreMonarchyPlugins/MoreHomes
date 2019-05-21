@@ -1,27 +1,35 @@
 ﻿using LiteDB;
+using MoreHomes.Helpers;
+using MoreHomes.Models;
 using Rocket.API;
 using Steamworks;
+using System;
 using System.Linq;
 using System.Text;
-using uDB;
 using UnityEngine;
 
 namespace MoreHomes
 {
-    public static class Database
+    public class MoreHomesDatabase
     {
-        public static bool AddBed(string bedName, CSteamID steamId, Vector3 position)
+        private MoreHomes PluginInstance;
+
+        public MoreHomesDatabase(MoreHomes pluginInstance)
         {
-            using (LiteDatabase liteDb = DbFinder.GetLiteDb("BedsDatabase.db", null))
+            this.PluginInstance = pluginInstance;
+        }
+
+        public bool AddBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
+        {
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
-                LiteCollection<TBedData> BedsData = liteDb.GetCollection<TBedData>("BedsData");
-
-                int maxLimit = MoreHomes.Instance.Configuration.Instance.DefaultHomes;
+                int maxLimit = PluginInstance.Configuration.Instance.DefaultHomes;
 
                 RocketPlayer player = new RocketPlayer(steamId.m_SteamID.ToString());
                 
-                foreach (var item in MoreHomes.Instance.Configuration.Instance.Permissions)
+                foreach (var item in PluginInstance.Configuration.Instance.Permissions)
                 {
                     if (player.HasPermission(item.SPermission))
                     {
@@ -29,57 +37,62 @@ namespace MoreHomes
                     }
                 }
 
-                var results = BedsData.Find(x => x.SteamId == steamId.m_SteamID);
+                var results = BedsData.Find(bed => bed.SteamId == steamId.m_SteamID);
 
                 if (results.Count() >= maxLimit)
                 {
                     return false;
                 }
 
-                TBedData bedData = new TBedData(steamId.m_SteamID, bedName.ToLower(), position.ToString());
+                PlayerBed bedData = new PlayerBed(steamId.m_SteamID, bedName, x, y, position);
 
                 BedsData.Insert(bedData);
             }
             return true;
         }
 
-        public static string GetBed(CSteamID steamId, string bedName)
+        public PlayerBed GetBedByName(CSteamID steamId, string bedName)
         {
-            using (LiteDatabase liteDb = DbFinder.GetLiteDb("BedsDatabase.db", null))
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
-                LiteCollection<TBedData> BedsData = liteDb.GetCollection<TBedData>("BedsData");
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
-                if (!BedsData.Exists(x=> x.BedName == bedName.ToLower() && x.SteamId == steamId.m_SteamID))
-                    return "null";
-
-                TBedData bed = BedsData.FindOne(x => (x.SteamId == steamId.m_SteamID) && (x.BedName == bedName.ToLower()));
-                return bed.BedPosition;
+                return BedsData.FindOne(x => x.SteamId == steamId.m_SteamID && x.BedName.Equals(bedName, System.StringComparison.OrdinalIgnoreCase));
             }
         }
 
-        public static void RemoveBed(string Id)
+        public void RemoveBedByPosition(byte x, byte y, Vector3 position)
         {
-            using (LiteDatabase liteDb = DbFinder.GetLiteDb("BedsDatabase.db", null))
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
-                LiteCollection<TBedData> BedsData = liteDb.GetCollection<TBedData>("BedsData");
-                BedsData.Delete(Id);
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+                BedsData.Delete(bed => bed.X == x && bed.Y == y && bed.Position == position.ToString());
             }
-        }   
+        }
 
-        public static string GetAllBeds(CSteamID steamId)
+        public void RemoveBedByName(CSteamID steamId, string bedName)
         {
-            using (LiteDatabase liteDb = DbFinder.GetLiteDb("BedsDatabase.db", null))
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
-                LiteCollection<TBedData> BedsData = liteDb.GetCollection<TBedData>("BedsData");
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+                BedsData.Delete(x=> x.SteamId == steamId.m_SteamID && x.BedName.Equals(bedName, System.StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        public string GetAllBedsMessage(CSteamID steamId)
+        {
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            {
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
                 var beds = BedsData.Find(x => x.SteamId == steamId.m_SteamID);
 
                 if (beds.Count() == 0)
-                    return "You don't have any bed to teleport.";
+                    return PluginInstance.Translate("no_home");
 
                 StringBuilder result = new StringBuilder(MoreHomes.Instance.Translate("command_homes"));
 
-                foreach (TBedData bed in beds)
+                foreach (PlayerBed bed in beds)
                 {
                     result.Append($" {bed.BedName},");
                 }
@@ -91,51 +104,37 @@ namespace MoreHomes
             }
         }
 
-        public static bool RenameBed(CSteamID steamId, string oldName, string newName)
+        public string GetNameForBed(CSteamID steamId)
         {
-            using (LiteDatabase liteDb = DbFinder.GetLiteDb("BedsDatabase.db", null))
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
-                LiteCollection<TBedData> BedsData = liteDb.GetCollection<TBedData>("BedsData");
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
-                if (!BedsData.Exists(x => x.BedName == oldName.ToLower() && x.SteamId == steamId.m_SteamID))
+                int count = BedsData.Count(x => x.SteamId == steamId.m_SteamID);
+
+                while(BedsData.Exists(x=> x.BedName.Equals("bed" + count)))
+                {
+                    count++;
+                }
+                return "bed" + count;
+            }
+        }
+
+        public bool RenameBed(CSteamID steamId, string oldName, string newName)
+        {
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            {
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+
+                if (!BedsData.Exists(x => x.BedName.Equals(oldName, System.StringComparison.OrdinalIgnoreCase) && x.SteamId == steamId.m_SteamID))
                     return false;
 
-                TBedData bed = BedsData.FindOne(x => (x.SteamId == steamId.m_SteamID) && (x.BedName == oldName.ToLower()));
+                PlayerBed bed = BedsData.FindOne(x => (x.SteamId == steamId.m_SteamID) && (x.BedName.Equals(oldName, System.StringComparison.OrdinalIgnoreCase)));
 
-                bed.BedName = newName.ToLower();
+                bed.BedName = newName;
                 BedsData.Update(bed);
             }
             return true;
-        }
-
-        public class TBedData
-        {
-            public TBedData(ulong steamId, string bedName, string bedPosition)
-            {
-                this.SteamId = steamId;
-                this.BedName = bedName;
-                this.BedPosition = bedPosition;
-
-            }
-
-            public TBedData()
-            {
-            }
-
-            [BsonId]
-            public string Id
-            {
-                get
-                {
-                    return this.BedPosition;
-                }
-            }
-
-            public ulong SteamId { get; set; }
-
-            public string BedName { get; set; }
-            public string BedPosition { get; set; }
-
         }
     }
 

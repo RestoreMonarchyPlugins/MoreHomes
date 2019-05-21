@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace MoreHomes
+namespace MoreHomes.Helpers
 {
-    public static class Tools
+    public static class VectorHelper
     {
         public static Vector3 StringToVector3(string sVector)
         {
@@ -28,7 +28,5 @@ namespace MoreHomes
 
             return result;
         }
-
-
     }
 }

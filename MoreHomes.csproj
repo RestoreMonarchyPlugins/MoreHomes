@@ -36,8 +36,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>lib\0Harmony.dll</HintPath>
+    <Reference Include="0Harmony, Version=1.2.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Lib.Harmony.1.2.0.1\lib\net45\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>lib\Assembly-CSharp.dll</HintPath>
@@ -45,18 +45,8 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>lib\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="I18N">
-      <HintPath>lib\I18N.dll</HintPath>
-    </Reference>
-    <Reference Include="I18N.West">
-      <HintPath>lib\I18N.West.dll</HintPath>
-    </Reference>
     <Reference Include="LiteDB">
       <HintPath>lib\LiteDB.dll</HintPath>
-    </Reference>
-    <Reference Include="MySql.Data, Version=8.0.13.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="Rocket.API">
       <HintPath>lib\Rocket.API.dll</HintPath>
@@ -73,9 +63,6 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="uDB">
-      <HintPath>lib\uDB.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine">
       <HintPath>lib\UnityEngine.dll</HintPath>
     </Reference>
@@ -87,13 +74,19 @@
     <Compile Include="Commands\CommandHome.cs" />
     <Compile Include="Commands\CommandHomes.cs" />
     <Compile Include="Commands\CommandRenameBed.cs" />
+    <Compile Include="Commands\RestoreHomes.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="Helpers\DbHelper.cs" />
+    <Compile Include="Helpers\VectorHelper.cs" />
+    <Compile Include="Models\PlayerBed.cs" />
     <Compile Include="MoreHomes.cs" />
     <Compile Include="MoreHomesConfiguration.cs" />
-    <Compile Include="Patches\BarricadeDestroy.cs" />
-    <Compile Include="Patches\Patch.cs" />
+    <Compile Include="Patches\BarricadeManager_TellTakeBarricade_Patch.cs" />
+    <Compile Include="Patches\BarricadeManager_AskClaimBed_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Tools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

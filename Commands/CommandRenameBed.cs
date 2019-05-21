@@ -41,7 +41,7 @@ namespace MoreHomes.Commands
                 return;
             } 
 
-            if (!Database.RenameBed(player.CSteamID, command[0], command[1]))
+            if (!MoreHomes.Instance.Database.RenameBed(player.CSteamID, command[0], command[1]))
             {
                 UnturnedChat.Say(caller, string.Format(MoreHomes.Instance.Translate("command_rename_not_found"), command[0]), Color.red);
                 return;

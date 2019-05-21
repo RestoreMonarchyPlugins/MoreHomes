@@ -12,21 +12,20 @@ using UnityEngine;
 namespace MoreHomes.Patches
 {
     [HarmonyPatch(typeof(BarricadeManager), "askClaimBed")]
-    public static class Patch
+    public static class BarricadeManager_AskClaimBed_Patch
     {
         [HarmonyPrefix]
-        public static bool Prefix(BarricadeManager __instance, CSteamID steamID, byte x, byte y, ushort plant, ushort index)
+        public static bool AskClaimBed_Prefix(BarricadeManager __instance, CSteamID steamID, byte x, byte y, ushort plant, ushort index)
         {
             BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion);
-            InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;
+            InteractableBed bed = barricadeRegion.drops[(int)index].interactable as InteractableBed;      
             Player player = PlayerTool.getPlayer(steamID);
-            Vector3 position = interactableBed.transform.position;
 
-            if (interactableBed != null && interactableBed.isClaimable && interactableBed.checkClaim(player.channel.owner.playerID.steamID))
+            if (bed != null && bed.isClaimable && bed.checkClaim(player.channel.owner.playerID.steamID))
             {
-                if (interactableBed.isClaimed)
+                if (bed.isClaimed)
                 {
-                    Database.RemoveBed(position.ToString());
+                    MoreHomes.Instance.Database.RemoveBedByPosition(x, y, bed.transform.position);
                     if (plant == 65535)
                     {
                         __instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
@@ -54,7 +53,8 @@ namespace MoreHomes.Patches
                 }
                 else
                 {
-                    bool result = Database.AddBed($"bed{index}", steamID, position);
+                    string bedName = MoreHomes.Instance.Database.GetNameForBed(steamID);
+                    bool result = MoreHomes.Instance.Database.AddBed(steamID, bedName, x, y, bed.transform.position);
                     if (!result)
                     {
                         UnturnedChat.Say(steamID, MoreHomes.Instance.Translate("home_max_warn"), Color.red);
@@ -86,16 +86,9 @@ namespace MoreHomes.Patches
 
                     
                 }
-                BitConverter.GetBytes(interactableBed.owner.m_SteamID).CopyTo(barricadeRegion.barricades[(int)index].barricade.state, 0);
+                BitConverter.GetBytes(bed.owner.m_SteamID).CopyTo(barricadeRegion.barricades[(int)index].barricade.state, 0);
             }
             return true;
-
-        }
-
-        [HarmonyPrefix]
-        public static void Postfix(BarricadeManager __instance)
-        {
-
 
         }
     }
