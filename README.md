@@ -39,8 +39,10 @@
   <Translation Id="command_homes" Value="Your beds:" />
   <Translation Id="command_home_not_found" Value="Can't find any bed called {0}." />
   <Translation Id="command_home_delay" Value="You will be teleported to your bed in {0} seconds!" />
+  <Translation Id="command_home_died" Value="Teleportation canceled, because you died." />
+  <Translation Id="no_home" Value="You don't have any bed to teleport." />
   <Translation Id="command_rename_not_found" Value="Couldn't rename bed {0}, because it doesn't exits." />
-  <Translation Id="command_rename_format" Value="Format: /renamehome [oldName] [newName]" />
+  <Translation Id="command_rename_format" Value="Format: /renamehome &lt;oldName&gt; &lt;newName&gt;" />
   <Translation Id="command_rename_success" Value="Successfully renamed {0} to {1}!" />
 </Translations>
 ```
