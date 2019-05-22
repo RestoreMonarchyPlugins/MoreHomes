@@ -1,9 +1,12 @@
-# MoreHomes - Unturned Plugin
+[![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/Teleportation/releases) [![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)]
+# MoreHomes - Unturned RocketMod4 Plugin
 * Allows players to have multiple beds
 * You can set the delay of teleportation
 * Manage max amount of homes by creating permissions  
+* Restore all beds to the database with a command  
+* Checks if bed exists before teleporting
  
-**Libraries:** 0Harmony and LiteDB  **
+**Libraries:** 0Harmony and LiteDB
 
 ## Commands
 **/home** - Teleports you to your first bed  
@@ -46,5 +49,3 @@
   <Translation Id="command_rename_success" Value="Successfully renamed {0} to {1}!" />
 </Translations>
 ```
-## Support
-If you need any help installing or setting up the plugin, be sure to join my Discord https://discord.gg/dCHkuxS
