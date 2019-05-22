@@ -1,15 +1,18 @@
-# MoreHomes - Unturned Plugin
+[![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/Teleportation/releases) ![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)
+# MoreHomes - Unturned RocketMod4 Plugin
 * Allows players to have multiple beds
 * You can set the delay of teleportation
 * Manage max amount of homes by creating permissions  
+* Restore all beds to the database with a command  
+* Checks if bed exists before teleporting
  
-**Libraries:** 0Harmony and LiteDB  **
+**Libraries:** 0Harmony and LiteDB
 
 ## Commands
 **/home** - Teleports you to your first bed  
 **/home [name]** - Teleports you to the selected bed 
 **/homes** - Prints all your beds to the chat  
-**/renamehome [oldName] [newName]** - Renames your bed
+**/renamehome [oldName] [newName]** - Renames your bed  
 **/restorehomes** - Console command which adds all beds on the map to database
 
 ## Default Configuration
@@ -39,10 +42,10 @@
   <Translation Id="command_homes" Value="Your beds:" />
   <Translation Id="command_home_not_found" Value="Can't find any bed called {0}." />
   <Translation Id="command_home_delay" Value="You will be teleported to your bed in {0} seconds!" />
+  <Translation Id="command_home_died" Value="Teleportation canceled, because you died." />
+  <Translation Id="no_home" Value="You don't have any bed to teleport." />
   <Translation Id="command_rename_not_found" Value="Couldn't rename bed {0}, because it doesn't exits." />
-  <Translation Id="command_rename_format" Value="Format: /renamehome [oldName] [newName]" />
+  <Translation Id="command_rename_format" Value="Format: /renamehome &lt;oldName&gt; &lt;newName&gt;" />
   <Translation Id="command_rename_success" Value="Successfully renamed {0} to {1}!" />
 </Translations>
 ```
-## Support
-If you need any help installing or setting up the plugin, be sure to join my Discord https://discord.gg/dCHkuxS
