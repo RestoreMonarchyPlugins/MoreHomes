@@ -112,7 +112,7 @@ namespace MoreHomes
 
                 int count = BedsData.Count(x => x.SteamId == steamId.m_SteamID);
 
-                while(BedsData.Exists(x=> x.BedName.Equals("bed" + count)))
+                while(BedsData.Exists(x=> x.BedName.Equals("bed" + count) && x.SteamId.Equals(steamId.m_SteamID)))
                 {
                     count++;
                 }
