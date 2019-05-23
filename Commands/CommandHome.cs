@@ -58,7 +58,8 @@ namespace MoreHomes.Commands
                 UnturnedChat.Say(caller, U.Translate("command_generic_teleport_while_driving_error", new object[0]));
                 throw new WrongUsageOfCommandException(caller, this);
             }
-            else if (command.Count() == 1)
+
+            if (command.Count() == 1)
             {
                 PlayerBed bed = MoreHomes.Instance.Database.GetBedByName(unturnedPlayer.CSteamID, command[0]);
                 if (bed != null)
