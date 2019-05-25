@@ -51,7 +51,7 @@ namespace MoreHomes.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             UnturnedPlayer unturnedPlayer = (UnturnedPlayer)caller;
-            Vector3 position;
+            Vector3 position = Vector3.zero;
 
             if (unturnedPlayer.Stance == EPlayerStance.DRIVING || unturnedPlayer.Stance == EPlayerStance.SITTING)
             {
@@ -59,52 +59,48 @@ namespace MoreHomes.Commands
                 throw new WrongUsageOfCommandException(caller, this);
             }
 
-            if (command.Count() == 1)
+            void GetPosition(PlayerBed bed)
+            {
+                var region = BarricadeManager.regions[bed.X, bed.Y];
+                if (region != null)
+                {
+                    InteractableBed interactableBed = null;
+                    foreach (var drop in region.drops)
+                    {
+                        if (drop.interactable is InteractableBed && drop.interactable.transform.position.ToString() == bed.Position)
+                        {
+                            interactableBed = (InteractableBed)drop.interactable;
+                            break;
+                        }
+                    }   
+
+                    if (interactableBed != null && interactableBed.owner == unturnedPlayer.CSteamID)
+                        position = interactableBed.transform.position;
+                }
+                else
+                {
+                    MoreHomes.Instance.Database.RemoveBedByName(unturnedPlayer.CSteamID, command[0]);
+                }
+            }
+
+            if (command.Count() >= 1)
             {
                 PlayerBed bed = MoreHomes.Instance.Database.GetBedByName(unturnedPlayer.CSteamID, command[0]);
-                if (bed != null)
-                {
-                    var region = BarricadeManager.regions[bed.X, bed.Y];
-                    if (region != null)
-                    {
-                        InteractableBed interactableBed = null;
-                        foreach (var drop in region.drops)
-                        {
-                            if (drop.interactable is InteractableBed && drop.interactable.transform.position.ToString() == bed.Position)
-                            {
-                                interactableBed = (InteractableBed)drop.interactable;
-                                break;
-                            }                            
-                        }
-                        
-                        if (interactableBed != null && interactableBed.owner == unturnedPlayer.CSteamID)
-                            position = interactableBed.transform.position;
-                        else
-                        {
-                            
-                            UnturnedChat.Say(caller, String.Format(MoreHomes.Instance.Translate("command_home_not_found"), command[0]), Color.red);
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        MoreHomes.Instance.Database.RemoveBedByName(unturnedPlayer.CSteamID, command[0]);
-                        UnturnedChat.Say(caller, MoreHomes.Instance.Translate("command_home_not_found", command[0]), Color.red);
-                        return;
-                    }
-                } else
+                if (bed == null)
                 {
                     UnturnedChat.Say(caller, MoreHomes.Instance.Translate("command_home_not_found", command[0]), Color.red);
                     return;
                 }
-                               
+                GetPosition(bed);
             } else
             {
-                if (!BarricadeManager.tryGetBed(unturnedPlayer.CSteamID, out position, out byte rot))
+                PlayerBed bed = MoreHomes.Instance.Database.GetFirstBed(unturnedPlayer.CSteamID);
+                if (bed == null)
                 {
                     UnturnedChat.Say(caller, MoreHomes.Instance.Translate("no_home"));
                     return;
                 }
+                GetPosition(bed);
             }
 
             if (MoreHomes.Instance.Configuration.Instance.TeleportationDelay != 0)
@@ -127,6 +123,12 @@ namespace MoreHomes.Commands
 
             void TeleportPlayer(bool isDelayed)
             {
+                if (position == Vector3.zero)
+                {
+                    UnturnedChat.Say(caller, MoreHomes.Instance.Translate("command_home_not_found"), Color.red);
+                    return;
+                }
+
                 if (isDelayed)
                 {
                     if (!unturnedPlayer.Dead)

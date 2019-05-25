@@ -19,11 +19,18 @@ namespace MoreHomes
             this.PluginInstance = pluginInstance;
         }
 
-        public bool AddBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
+        public bool ClaimBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
         {
             using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+
+                var results = BedsData.Find(bed => bed.SteamId == steamId.m_SteamID);
+
+                if (results.Any(bed => bed.BedName.Equals(bedName, StringComparison.OrdinalIgnoreCase) && bed.SteamId == steamId.m_SteamID && bed.Position == position.ToString()))
+                {
+                    return false;
+                }
 
                 int maxLimit = PluginInstance.Configuration.Instance.DefaultHomes;
 
@@ -36,16 +43,29 @@ namespace MoreHomes
                         maxLimit = item.MaxHomes;
                     }
                 }
-
-                var results = BedsData.Find(bed => bed.SteamId == steamId.m_SteamID);
-
                 if (results.Count() >= maxLimit)
                 {
                     return false;
                 }
 
                 PlayerBed bedData = new PlayerBed(steamId.m_SteamID, bedName, x, y, position);
+                BedsData.Insert(bedData);
+            }
+            return true;
+        }
 
+        public bool RestoreBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
+        {
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            {
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+
+                if (BedsData.Exists(bed => bed.SteamId == steamId.m_SteamID && bed.Position == position.ToString()))
+                {
+                    return false;
+                }
+
+                PlayerBed bedData = new PlayerBed(steamId.m_SteamID, bedName, x, y, position);
                 BedsData.Insert(bedData);
             }
             return true;
@@ -58,6 +78,16 @@ namespace MoreHomes
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
                 return BedsData.FindOne(x => x.SteamId == steamId.m_SteamID && x.BedName.Equals(bedName, System.StringComparison.OrdinalIgnoreCase));
+            }
+        }
+
+        public PlayerBed GetFirstBed(CSteamID steamId)
+        {
+            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            {
+                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
+
+                return BedsData.FindOne(x => x.SteamId == steamId.m_SteamID);
             }
         }
 

@@ -54,7 +54,7 @@ namespace MoreHomes.Patches
                 else
                 {
                     string bedName = MoreHomes.Instance.Database.GetNameForBed(steamID);
-                    bool result = MoreHomes.Instance.Database.AddBed(steamID, bedName, x, y, bed.transform.position);
+                    bool result = MoreHomes.Instance.Database.ClaimBed(steamID, bedName, x, y, bed.transform.position);
                     if (!result)
                     {
                         UnturnedChat.Say(steamID, MoreHomes.Instance.Translate("home_max_warn"), Color.red);

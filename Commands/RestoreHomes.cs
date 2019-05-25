@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace MoreHomes.Commands
 {
-    public class RestoreHomes : IRocketCommand
+    public class CommandRestoreHomes : IRocketCommand
     {
         public string Help
         {
@@ -57,9 +57,8 @@ namespace MoreHomes.Commands
                         if (interactableBed.isClaimed)
                         {
                             Regions.tryGetCoordinate(interactableBed.transform.position, out byte x, out byte y);
-                            MoreHomes.Instance.Database.AddBed(interactableBed.owner, MoreHomes.Instance.Database
-                                .GetNameForBed(interactableBed.owner), x, y, interactableBed.transform.position);
-                            count++;
+                            if (MoreHomes.Instance.Database.RestoreBed(interactableBed.owner, MoreHomes.Instance.Database.GetNameForBed(interactableBed.owner), x, y, interactableBed.transform.position))
+                                count++;
                         }                        
                     }
                 }
