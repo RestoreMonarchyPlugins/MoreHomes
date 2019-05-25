@@ -75,7 +75,7 @@
     <Compile Include="Commands\CommandHome.cs" />
     <Compile Include="Commands\CommandHomes.cs" />
     <Compile Include="Commands\CommandRenameBed.cs" />
-    <Compile Include="Commands\RestoreHomes.cs" />
+    <Compile Include="Commands\CommandRestoreHomes.cs" />
     <Compile Include="Database.cs" />
     <Compile Include="Helpers\DbHelper.cs" />
     <Compile Include="Helpers\VectorHelper.cs" />
