@@ -35,7 +35,7 @@ namespace MoreHomes.Commands
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
             
-            if (command.Count() == 0 && command.Count() > 2)
+            if (command.Count() == 0 || command.Count() > 2)
             {
                 UnturnedChat.Say(caller, string.Format(MoreHomes.Instance.Translate("command_rename_format")), Color.red);
                 return;
