@@ -56,7 +56,7 @@ namespace MoreHomes.Commands
             if (unturnedPlayer.Stance == EPlayerStance.DRIVING || unturnedPlayer.Stance == EPlayerStance.SITTING)
             {
                 UnturnedChat.Say(caller, U.Translate("command_generic_teleport_while_driving_error", new object[0]));
-                throw new WrongUsageOfCommandException(caller, this);
+                return;
             }
 
             void GetPosition(PlayerBed bed)
@@ -131,6 +131,12 @@ namespace MoreHomes.Commands
 
                 if (isDelayed)
                 {
+                    if (unturnedPlayer.Stance == EPlayerStance.DRIVING || unturnedPlayer.Stance == EPlayerStance.SITTING)
+                    {
+                        UnturnedChat.Say(caller, U.Translate("command_generic_teleport_while_driving_error", new object[0]));
+                        return;
+                    }   
+
                     if (!unturnedPlayer.Dead)
                     {
                         unturnedPlayer.Teleport(position, unturnedPlayer.Rotation);
@@ -144,7 +150,6 @@ namespace MoreHomes.Commands
                 {
                     unturnedPlayer.Teleport(position, unturnedPlayer.Rotation);
                 }
-
             }
 
         }
