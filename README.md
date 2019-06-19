@@ -1,4 +1,4 @@
-[![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/Teleportation/releases) ![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)
+[![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/MoreHomes/releases) ![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)
 # MoreHomes - Unturned RocketMod4 Plugin
 * Allows players to have multiple beds
 * You can set the delay of teleportation
