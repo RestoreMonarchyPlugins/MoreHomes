@@ -1,4 +1,5 @@
 ﻿using Rocket.API;
+using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
@@ -33,7 +34,7 @@ namespace MoreHomes.Commands
 
         public AllowedCaller AllowedCaller
         {
-            get { return AllowedCaller.Console; }
+            get { return AllowedCaller.Player; }
         }
 
         public List<string> Permissions
@@ -64,7 +65,7 @@ namespace MoreHomes.Commands
                 }
             }
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Mission accomplished, {count} beds restored!");
+            UnturnedChat.Say(caller, $"Mission accomplished, {count} beds restored!");
         }
     }
 }

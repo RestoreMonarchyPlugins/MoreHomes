@@ -33,7 +33,7 @@ namespace MoreHomes.Commands
 
         public AllowedCaller AllowedCaller
         {
-            get { return AllowedCaller.Both; }
+            get { return AllowedCaller.Player; }
         }
 
         public List<string> Permissions
