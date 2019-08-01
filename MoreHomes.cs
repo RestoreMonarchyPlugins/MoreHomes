@@ -45,6 +45,7 @@ namespace MoreHomes
                     {"home_max_warn","You can't have more beds!"},
                     {"command_homes","Your beds:"},
                     {"command_home_not_found","Can't find any bed called {0}."},
+                    {"command_home_destroyed","The bed you were trying to teleport got destroyed!"},
                     {"command_home_delay","You will be teleported to your bed in {0} seconds!"},
                     {"command_home_died","Teleportation canceled, because you died."},
                     {"no_home","You don't have any bed to teleport."},

@@ -125,7 +125,7 @@ namespace MoreHomes.Commands
             {
                 if (position == Vector3.zero)
                 {
-                    UnturnedChat.Say(caller, MoreHomes.Instance.Translate("command_home_not_found"), Color.red);
+                    UnturnedChat.Say(caller, MoreHomes.Instance.Translate("command_home_destroyed"), Color.red);
                     return;
                 }
 
