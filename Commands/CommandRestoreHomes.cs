@@ -3,10 +3,6 @@ using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 
 namespace MoreHomes.Commands
 {
@@ -34,7 +30,7 @@ namespace MoreHomes.Commands
 
         public AllowedCaller AllowedCaller
         {
-            get { return AllowedCaller.Player; }
+            get { return AllowedCaller.Both; }
         }
 
         public List<string> Permissions
