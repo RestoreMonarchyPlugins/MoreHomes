@@ -8,38 +8,17 @@ namespace MoreHomes.Commands
 {
     public class CommandRestoreHomes : IRocketCommand
     {
-        public string Help
-        {
-            get { return "Restores the beds from the map (adds them to database)."; }
-        }
+        public string Help => "Deletes all beds from database, and then adds these found on map again.";
 
-        public string Name
-        {
-            get { return "restorehomes"; }
-        }
+        public string Name => "restorehomes";
 
-        public string Syntax
-        {
-            get { return ""; }
-        }
+        public string Syntax => string.Empty;
 
-        public List<string> Aliases
-        {
-            get { return new List<string>(); }
-        }
+        public List<string> Aliases => new List<string>();
 
-        public AllowedCaller AllowedCaller
-        {
-            get { return AllowedCaller.Both; }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Both;
 
-        public List<string> Permissions
-        {
-            get
-            {
-                return new List<string>() { "restorehomes" };
-            }
-        }
+        public List<string> Permissions => new List<string>() { "restorehomes", "morehomes.admin" };
 
         public void Execute(IRocketPlayer caller, string[] command)
         {
@@ -54,7 +33,7 @@ namespace MoreHomes.Commands
                         if (interactableBed.isClaimed)
                         {
                             Regions.tryGetCoordinate(interactableBed.transform.position, out byte x, out byte y);
-                            if (MoreHomes.Instance.Database.RestoreBed(interactableBed.owner, MoreHomes.Instance.Database.GetNameForBed(interactableBed.owner), x, y, interactableBed.transform.position))
+                            if (MoreHomes.Instance.Database.ClaimBed(interactableBed.owner, null, x, y, interactableBed.transform.position, false))
                                 count++;
                         }                        
                     }

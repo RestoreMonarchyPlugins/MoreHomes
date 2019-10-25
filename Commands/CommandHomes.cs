@@ -7,38 +7,17 @@ namespace MoreHomes.Commands
 {
     public class CommandHomes : IRocketCommand
     {
-        public string Help
-        {
-            get { return "Shows the list of your beds."; }
-        }
+        public string Help => "Displays a list of caller's beds.";
 
-        public string Name
-        {
-            get { return "homes"; }
-        }
+        public string Name => "homes";
 
-        public string Syntax
-        {
-            get { return ""; }
-        }
+        public string Syntax => string.Empty;
 
-        public List<string> Aliases
-        {
-            get { return new List<string>(); }
-        }
+        public List<string> Aliases => new List<string>();
 
-        public AllowedCaller AllowedCaller
-        {
-            get { return AllowedCaller.Player; }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
-        public List<string> Permissions
-        {
-            get
-            {
-                return new List<string>() { "homes" };
-            }
-        }
+        public List<string> Permissions => new List<string>() { "homes", "morehomes.admin" };
 
         public void Execute(IRocketPlayer caller, string[] command)
         {

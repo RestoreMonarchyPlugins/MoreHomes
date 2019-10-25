@@ -12,58 +12,40 @@ namespace MoreHomes
 {
     public class MoreHomesDatabase
     {
-        private MoreHomes PluginInstance;
+        private MoreHomes pluginInstance => MoreHomes.Instance;
 
-        public MoreHomesDatabase(MoreHomes pluginInstance)
+        public bool ClaimBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position, bool checkPermissions = true)
         {
-            this.PluginInstance = pluginInstance;
-        }
-
-        public bool ClaimBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
-        {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
                 var results = BedsData.Find(bed => bed.SteamId == steamId.m_SteamID);
 
-                if (results.Any(bed => bed.BedName.Equals(bedName, StringComparison.OrdinalIgnoreCase) && bed.SteamId == steamId.m_SteamID && bed.Position == position.ToString()))
-                {
+                if (bedName == null)
+                    bedName = GetNameForBed(steamId);
+
+                if (results.Any(bed => bed.SteamId == steamId.m_SteamID && bed.Position == position.ToString()))
                     return false;
-                }
 
-                int maxLimit = PluginInstance.Configuration.Instance.DefaultHomes;
-
-                RocketPlayer player = new RocketPlayer(steamId.m_SteamID.ToString());
-                
-                foreach (var item in PluginInstance.Configuration.Instance.Permissions)
+                if (checkPermissions)
                 {
-                    if (player.HasPermission(item.SPermission))
+                    int maxLimit = pluginInstance.Configuration.Instance.DefaultHomes;
+
+                    RocketPlayer player = new RocketPlayer(steamId.m_SteamID.ToString());
+
+                    foreach (var item in pluginInstance.Configuration.Instance.Permissions)
                     {
-                        maxLimit = item.MaxHomes;
+                        if (player.HasPermission(item.SPermission))
+                        {
+                            maxLimit = item.MaxHomes;
+                        }
                     }
-                }
-                if (results.Count() >= maxLimit)
-                {
-                    return false;
-                }
-
-                PlayerBed bedData = new PlayerBed(steamId.m_SteamID, bedName, x, y, position);
-                BedsData.Insert(bedData);
-            }
-            return true;
-        }
-
-        public bool RestoreBed(CSteamID steamId, string bedName, byte x, byte y, Vector3 position)
-        {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
-            {
-                LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
-
-                if (BedsData.Exists(bed => bed.SteamId == steamId.m_SteamID && bed.Position == position.ToString()))
-                {
-                    return false;
-                }
+                    if (results.Count() >= maxLimit)
+                    {
+                        return false;
+                    }
+                }                
 
                 PlayerBed bedData = new PlayerBed(steamId.m_SteamID, bedName, x, y, position);
                 BedsData.Insert(bedData);
@@ -73,7 +55,7 @@ namespace MoreHomes
 
         public PlayerBed GetBedByName(CSteamID steamId, string bedName)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
@@ -81,19 +63,19 @@ namespace MoreHomes
             }
         }
 
-        public PlayerBed GetFirstBed(CSteamID steamId)
+        public PlayerBed GetBedByPosition(CSteamID steamId, Vector3 position)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
-                return BedsData.FindOne(x => x.SteamId == steamId.m_SteamID);
+                return BedsData.FindOne(x => x.SteamId == steamId.m_SteamID && x.Position == position.ToString());
             }
         }
 
         public void RemoveBedByPosition(byte x, byte y, Vector3 position)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
                 BedsData.Delete(bed => bed.X == x && bed.Y == y && bed.Position == position.ToString());
@@ -102,7 +84,7 @@ namespace MoreHomes
 
         public void RemoveBedByName(CSteamID steamId, string bedName)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
                 BedsData.Delete(x=> x.SteamId == steamId.m_SteamID && x.BedName.Equals(bedName, System.StringComparison.OrdinalIgnoreCase));
@@ -111,14 +93,14 @@ namespace MoreHomes
 
         public string GetAllBedsMessage(CSteamID steamId)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
                 var beds = BedsData.Find(x => x.SteamId == steamId.m_SteamID);
 
                 if (beds.Count() == 0)
-                    return PluginInstance.Translate("no_home");
+                    return pluginInstance.Translate("no_home");
 
                 StringBuilder result = new StringBuilder(MoreHomes.Instance.Translate("command_homes"));
 
@@ -136,7 +118,7 @@ namespace MoreHomes
 
         public string GetNameForBed(CSteamID steamId)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 
@@ -152,7 +134,7 @@ namespace MoreHomes
 
         public bool RenameBed(CSteamID steamId, string oldName, string newName)
         {
-            using (LiteDatabase database = DbHelper.GetLiteDb("Database.db"))
+            using (LiteDatabase database = Utilities.GetLiteDb("Database.db"))
             {
                 LiteCollection<PlayerBed> BedsData = database.GetCollection<PlayerBed>("HomesData");
 

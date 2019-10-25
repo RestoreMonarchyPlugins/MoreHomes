@@ -70,6 +70,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>lib\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>lib\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CommandHome.cs" />
@@ -77,8 +80,7 @@
     <Compile Include="Commands\CommandRenameBed.cs" />
     <Compile Include="Commands\CommandRestoreHomes.cs" />
     <Compile Include="Database.cs" />
-    <Compile Include="Helpers\DbHelper.cs" />
-    <Compile Include="Helpers\VectorHelper.cs" />
+    <Compile Include="Utilities\Utilities.cs" />
     <Compile Include="Models\PlayerBed.cs" />
     <Compile Include="MoreHomes.cs" />
     <Compile Include="MoreHomesConfiguration.cs" />

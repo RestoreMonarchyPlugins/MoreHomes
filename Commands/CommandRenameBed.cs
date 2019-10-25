@@ -14,17 +14,11 @@ namespace MoreHomes.Commands
 
         public string Help => "Renames your bed";
 
-        public string Syntax => "<oldBedName> <newBedName>";
+        public string Syntax => "<PreviousName> <NewName>";
 
-        public List<string> Aliases
-        {
-            get { return new List<string>(); }
-        }
+        public List<string> Aliases => new List<string>();
 
-        public AllowedCaller AllowedCaller
-        {
-            get { return AllowedCaller.Player; }
-        }
+        public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public List<string> Permissions => new List<string>() { "home.rename" };
 

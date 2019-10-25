@@ -1,4 +1,6 @@
 ﻿using LiteDB;
+using MoreHomes.Helpers;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,11 +14,11 @@ namespace MoreHomes.Models
     {
         public PlayerBed(ulong steamId, string bedName, byte x, byte y, Vector3 position)
         {
-            this.SteamId = steamId;
-            this.BedName = bedName;
-            this.X = x;
-            this.Y = y;
-            this.Position = position.ToString();
+            SteamId = steamId;
+            BedName = bedName;
+            X = x;
+            Y = y;
+            Position = position.ToString();
         }
 
         public PlayerBed() { }
@@ -27,5 +29,9 @@ namespace MoreHomes.Models
         public int X { get; set; }
         public int Y { get; set; }
         public string Position { get; set; }
+
+        [BsonIgnore]
+        public Vector3 Vector3 => Position.ToVector3();
+        public CSteamID CSteamID => new CSteamID(SteamId);
     }
 }
