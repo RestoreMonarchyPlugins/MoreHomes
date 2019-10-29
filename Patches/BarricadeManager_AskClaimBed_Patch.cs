@@ -1,15 +1,12 @@
 ﻿using Harmony;
-using LiteDB;
 using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using Steamworks;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using UnityEngine;
+using RestoreMonarchy.MoreHomes.Utilities;
 
-namespace MoreHomes.Patches
+namespace RestoreMonarchy.MoreHomes.Patches
 {
     [HarmonyPatch(typeof(BarricadeManager), "askClaimBed")]
     public static class BarricadeManager_AskClaimBed_Patch
@@ -18,14 +15,15 @@ namespace MoreHomes.Patches
         public static bool AskClaimBed_Prefix(BarricadeManager __instance, CSteamID steamID, byte x, byte y, ushort plant, ushort index)
         {
             BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion);
-            InteractableBed bed = barricadeRegion.drops[(int)index].interactable as InteractableBed;      
+            InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;      
             Player player = PlayerTool.getPlayer(steamID);
-
-            if (bed != null && bed.isClaimable && bed.checkClaim(player.channel.owner.playerID.steamID))
+            
+            if (interactableBed != null && interactableBed.isClaimable && interactableBed.checkClaim(steamID))
             {
-                if (bed.isClaimed)
+                if (interactableBed.isClaimed)
                 {
-                    MoreHomes.Instance.Database.RemoveBedByPosition(x, y, bed.transform.position);
+                    // "Destroy" if unclaim
+                    MoreHomesPlugin.Instance.DataCache.DestroyBed(interactableBed.transform);
                     if (plant == 65535)
                     {
                         __instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
@@ -48,19 +46,20 @@ namespace MoreHomes.Patches
                                 CSteamID.Nil
                         });
                     }
-
                     return false;
                 }
                 else
                 {
-                    string bedName = MoreHomes.Instance.Database.GetNameForBed(steamID);
-                    bool result = MoreHomes.Instance.Database.ClaimBed(steamID, bedName, x, y, bed.transform.position);
-                    if (!result)
+                    // Inserted Code
+                    int bedsCount = MoreHomesPlugin.Instance.DataCache.GetBedsCount(player.channel.owner.playerID.steamID.m_SteamID);
+                    if (bedsCount >= MoreHomesPlugin.Instance.GetMaxBeds(player.channel.owner.playerID.steamID.m_SteamID))
                     {
-                        UnturnedChat.Say(steamID, MoreHomes.Instance.Translate("home_max_warn"), Color.red);
+                        UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("MaxHomesWarn"), MoreHomesPlugin.Instance.MessageColor);
                         return false;
-
                     }
+
+                    MoreHomesPlugin.Instance.DataCache.ClaimBed(steamID.m_SteamID, interactableBed.transform);
+
                     if (plant == 65535)
                     {
                         __instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
@@ -86,7 +85,7 @@ namespace MoreHomes.Patches
 
                     
                 }
-                BitConverter.GetBytes(bed.owner.m_SteamID).CopyTo(barricadeRegion.barricades[(int)index].barricade.state, 0);
+                BitConverter.GetBytes(interactableBed.owner.m_SteamID).CopyTo(barricadeRegion.barricades[(int)index].barricade.state, 0);
             }
             return true;
 

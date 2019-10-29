@@ -1,8 +1,9 @@
 ﻿using Harmony;
+using RestoreMonarchy.MoreHomes.Utilities;
 using SDG.Unturned;
 using Steamworks;
 
-namespace MoreHomes.Patches
+namespace RestoreMonarchy.MoreHomes.Patches
 {
     [HarmonyPatch(typeof(BarricadeManager), "tellTakeBarricade")]
     public static class BarricadeManager_TellTakeBarricade_Patch
@@ -13,12 +14,9 @@ namespace MoreHomes.Patches
             if (BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion))
             {
                 InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;
-
                 if (interactableBed != null)
                 {
-                    Player player = PlayerTool.getPlayer(steamID);
-
-                    MoreHomes.Instance.Database.RemoveBedByPosition(x, y, interactableBed.transform.position);
+                    MoreHomesPlugin.Instance.DataCache.DestroyBed(interactableBed.transform);
                 }
             }            
         }

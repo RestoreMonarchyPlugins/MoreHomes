@@ -1,32 +1,43 @@
-﻿using Rocket.API;
-using System;
+﻿using RestoreMonarchy.MoreHomes.Utilities;
+using Rocket.API;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace MoreHomes
+namespace RestoreMonarchy.MoreHomes
 {
     public class MoreHomesConfiguration : IRocketPluginConfiguration
     {
-        public int TeleportationDelay { get; set; }
-        public int DefaultHomes { get; set; }
-        public List<Permission> Permissions  { get; set; }
+        public string MessageColor { get; set; }        
+        public double DefaultHomeCooldown { get; set; }
+        public float DefaultHomeDelay { get; set; }
+        public int DefaultMaxHomes { get; set; }        
+        public List<VIPPermission> VIPCooldowns { get; set; }
+        public List<VIPPermission> VIPDelays { get; set; }
+        public List<VIPPermission> VIPMaxHomes { get; set; }
 
         public void LoadDefaults()
         {
-            TeleportationDelay = 5;
-            DefaultHomes = 2;
-            Permissions = new List<Permission>()
-            {
-                new Permission() { MaxHomes = 3, SPermission = "home.vip" },
-                new Permission() { MaxHomes = 5, SPermission = "home.lord" }
-            };
-        }
-    }
+            MessageColor = "yellow";
+            DefaultHomeCooldown = 20;
+            DefaultHomeDelay = 10;
+            DefaultMaxHomes = 2;
 
-    public class Permission
-    {
-        public int MaxHomes { get; set; }
-        public string SPermission { get; set; }
+            VIPCooldowns = new List<VIPPermission>()
+            {
+                new VIPPermission("morehomes.vip", 10),
+                new VIPPermission("morehomes.star", 5)
+            }; 
+            VIPDelays = new List<VIPPermission>()
+            {
+                new VIPPermission("morehomes.vip", 5),
+                new VIPPermission("morehomes.star", 3)
+            };
+            VIPMaxHomes = new List<VIPPermission>()
+            {
+                new VIPPermission("morehomes.vip", 3),
+                new VIPPermission("morehomes.star", 4)
+            };
+
+
+        }
     }
 }
