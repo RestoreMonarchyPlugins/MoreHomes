@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Utilities
 {
-    public static class PlayerDataUtility
+    public static class PlayersDataUtility
     {
         public static bool RenameBed(this List<PlayerData> data, PlayerHome home, string newName)
         {
@@ -26,12 +26,15 @@ namespace RestoreMonarchy.MoreHomes.Utilities
         {
             foreach (PlayerData player in data)
             {
-                foreach (PlayerHome home in player.Homes)
+                if (player.Homes != null)
                 {
-                    if (home.Transform.position != null)
-                        home.Position = new ConvertablePosition(home.Transform.position);
-                    else
-                        player.Homes.Remove(home);
+                    foreach (PlayerHome home in player.Homes)
+                    {
+                        if (home?.Transform?.position != null)
+                            home.Position = new ConvertablePosition(home.Transform.position);
+                        else
+                            player.Homes.Remove(home);
+                    }
                 }
             }
         }
