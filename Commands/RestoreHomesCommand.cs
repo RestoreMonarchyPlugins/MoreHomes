@@ -23,7 +23,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                     InteractableBed bed = drop.interactable as InteractableBed;
                     if (bed != null && bed.isClaimed)
                     {
-                        if (pluginInstance.DataCache.Exists(x => x.Homes.Exists(y => y.Transform == bed.transform)))
+                        if (!pluginInstance.DataCache.Exists(x => x.Homes.Exists(y => y.Transform == bed.transform)))
                         {
                             pluginInstance.DataCache.ClaimBed(bed.owner.m_SteamID, bed.transform);
                             num++;

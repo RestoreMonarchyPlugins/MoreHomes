@@ -48,7 +48,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
         }
 
         private bool ValidateTeleportation(UnturnedPlayer player, PlayerHome home)
-        {            
+        {
             if (home.Transform == null || home.Owner == null)
             {
                 UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);

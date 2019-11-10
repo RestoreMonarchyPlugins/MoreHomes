@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using RestoreMonarchy.Teleportation;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
+using Steamworks;
 
 namespace RestoreMonarchy.MoreHomes
 {
@@ -47,7 +48,7 @@ namespace RestoreMonarchy.MoreHomes
         {
             IRocketPlugin plugin = R.Plugins.GetPlugin("Teleportation");
             if (plugin != null)
-            {
+            {   
                 TeleportationPlugin = plugin;
             }
         }
@@ -76,9 +77,9 @@ namespace RestoreMonarchy.MoreHomes
             { "HomeSuccess", "Successfully teleported You to your {0} bed!" },
             { "HomeList", "Your beds: " },
             { "NoHomes", "You don't have any bed claimed" },
-            { "RemoveHomeFormat", "Format: /removehome <BedName>" },
+            { "DestroyHomeFormat", "Format: /destroyhome <BedName>" },
             { "HomeNotFound", "No home match {0} name" },
-            { "RemoveHomeSuccess", "Successfully removed and unclaimed your {0} home!" },
+            { "DestroyHomeSuccess", "Successfully destroyed and unclaimed your {0} home!" },
             { "RenameHomeFormat", "Format: /renamehome <HomeName> <NewName>" },
             { "HomeAlreadyExists", "You already have a home named {0}" },
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
@@ -92,7 +93,10 @@ namespace RestoreMonarchy.MoreHomes
             HarmonyInstance?.UnpatchAll(HarmonyInstanceId);
             HarmonyInstance = null;
 
+            R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
+
             Level.onLevelLoaded -= (level) => LoadData();
+            SaveManager.onPostSave -= () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }

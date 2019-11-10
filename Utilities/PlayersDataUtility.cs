@@ -24,13 +24,13 @@ namespace RestoreMonarchy.MoreHomes.Utilities
 
         public static void UpdateBeds(this List<PlayerData> data)
         {
-            foreach (PlayerData player in data)
+            foreach (PlayerData player in data.ToList())
             {
                 if (player.Homes != null)
                 {
                     foreach (PlayerHome home in player.Homes)
                     {
-                        if (home?.Transform?.position != null)
+                        if (home?.Transform != null)
                             home.Position = new ConvertablePosition(home.Transform.position);
                         else
                             player.Homes.Remove(home);
@@ -93,12 +93,12 @@ namespace RestoreMonarchy.MoreHomes.Utilities
         public static string GetUniqueBedName(this PlayerData player)
         {
             int num = player.Homes.Count;
-
+        
             while (player.Homes.Exists(x => x.Name.Equals(player.DefaultHomeName + num, StringComparison.OrdinalIgnoreCase)))
             {
                 num++;
             }
-
+        
             return player.DefaultHomeName + num;
         }
 

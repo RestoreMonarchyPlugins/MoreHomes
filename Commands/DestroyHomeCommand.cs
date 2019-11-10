@@ -9,7 +9,7 @@ using RestoreMonarchy.MoreHomes.Models;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
-    public class RemoveHomeCommand : IRocketCommand
+    public class DestroyHomeCommand : IRocketCommand
     {
         private MoreHomesPlugin pluginInstance => MoreHomesPlugin.Instance;        
 
@@ -20,7 +20,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
             
             if (homeName == null)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("RemoveHomeFormat"), pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeFormat"), pluginInstance.MessageColor);
                 return;
             }
 
@@ -31,8 +31,15 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            BarricadeManager.salvageBarricade(home.Transform);
-            UnturnedChat.Say(caller, pluginInstance.Translate("RemoveHomeSuccess", home.Name), pluginInstance.MessageColor);
+            BarricadeManager.tryGetInfo(home.Transform, out byte b, out byte b2, out ushort num, out ushort num2, out _);
+            BarricadeManager.instance.channel.send("tellTakeBarricade", ESteamCall.ALL, b, b2, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
+                {
+                    b,
+                    b2,
+                    num,
+                    num2
+                });
+            UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeSuccess", home.Name), pluginInstance.MessageColor);
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

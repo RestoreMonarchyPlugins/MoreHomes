@@ -81,7 +81,7 @@
   <ItemGroup>
     <Compile Include="Commands\HomeCommand.cs" />
     <Compile Include="Commands\HomesCommand.cs" />
-    <Compile Include="Commands\RemoveHomeCommand.cs" />
+    <Compile Include="Commands\DestroyHomeCommand.cs" />
     <Compile Include="Commands\RenameHomeCommand.cs" />
     <Compile Include="Commands\RestoreHomesCommand.cs" />
     <Compile Include="Models\ConvertablePosition.cs" />
