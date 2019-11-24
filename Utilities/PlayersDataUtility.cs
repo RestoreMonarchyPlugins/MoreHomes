@@ -3,8 +3,6 @@ using SDG.Unturned;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Utilities
@@ -24,19 +22,26 @@ namespace RestoreMonarchy.MoreHomes.Utilities
 
         public static void UpdateBeds(this List<PlayerData> data)
         {
-            foreach (PlayerData player in data.ToList())
+            lock (data)
             {
-                if (player.Homes != null)
+                foreach (PlayerData player in data)
                 {
-                    foreach (PlayerHome home in player.Homes)
+                    lock(player.Homes)
                     {
-                        if (home?.Transform != null)
-                            home.Position = new ConvertablePosition(home.Transform.position);
-                        else
-                            player.Homes.Remove(home);
+                        if (player.Homes != null)
+                        {
+                            foreach (PlayerHome home in player.Homes)
+                            {
+                                if (home?.Transform != null)
+                                    home.Position = new ConvertablePosition(home.Transform.position);
+                                else
+                                    player.Homes.Remove(home);
+                            }
+                        }
                     }
                 }
             }
+            
         }
 
         public static void InitializeBeds(this List<PlayerData> data)

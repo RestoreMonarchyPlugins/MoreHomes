@@ -31,6 +31,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
+            pluginInstance.DataCache.DestroyBed(home.Transform);
             BarricadeManager.tryGetInfo(home.Transform, out byte b, out byte b2, out ushort num, out ushort num2, out _);
             BarricadeManager.instance.channel.send("tellTakeBarricade", ESteamCall.ALL, b, b2, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {
