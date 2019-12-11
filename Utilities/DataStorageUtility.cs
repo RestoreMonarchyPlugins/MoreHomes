@@ -31,6 +31,7 @@ namespace RestoreMonarchy.MoreHomes.Utilities
         public static void SavePlayersData(this DataStorage storage, List<PlayerData> data)
         {
             data.UpdateBeds();
+            
             storage.SaveObject(data);
         }
     }

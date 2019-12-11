@@ -4,7 +4,11 @@ namespace RestoreMonarchy.MoreHomes.Models
 {
     public class PlayerData
     {
-        public PlayerData() { }
+        public PlayerData() 
+        {
+            Homes = new List<PlayerHome>();
+        }
+
         public PlayerData(ulong playerId)
         {
             PlayerId = playerId;

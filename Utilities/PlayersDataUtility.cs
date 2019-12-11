@@ -22,26 +22,17 @@ namespace RestoreMonarchy.MoreHomes.Utilities
 
         public static void UpdateBeds(this List<PlayerData> data)
         {
-            lock (data)
+            foreach (PlayerData player in data)
             {
-                foreach (PlayerData player in data)
+                if (player.Homes != null)
                 {
-                    lock(player.Homes)
+                    player.Homes.RemoveAll(x => x.Transform == null);
+                    foreach (PlayerHome home in player.Homes)
                     {
-                        if (player.Homes != null)
-                        {
-                            foreach (PlayerHome home in player.Homes)
-                            {
-                                if (home?.Transform != null)
-                                    home.Position = new ConvertablePosition(home.Transform.position);
-                                else
-                                    player.Homes.Remove(home);
-                            }
-                        }
+                        home.Position = new ConvertablePosition(home.Transform.position);
                     }
                 }
             }
-            
         }
 
         public static void InitializeBeds(this List<PlayerData> data)
