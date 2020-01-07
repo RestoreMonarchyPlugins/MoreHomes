@@ -29,62 +29,13 @@ namespace RestoreMonarchy.MoreHomes.Commands
             }
 
             float delay = pluginInstance.GetDelay(player.CSteamID.m_SteamID);
+            HomeTeleport teleport = new HomeTeleport(home, player);
 
-            if (!ValidateTeleportation(player, home))
+            if (!teleport.ValidateTeleportation())
                 return;
 
-            if (delay > 0)
-            {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeDelayWarn", delay), pluginInstance.MessageColor);
-            }
-
-            TaskDispatcher.QueueOnMainThread(() =>
-            {
-                if (!ValidateTeleportation(player, home))
-                    return;
-
-                player.Teleport(home.Transform.position, player.Rotation);
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);
-            }, delay);
-        }
-
-        private bool ValidateTeleportation(UnturnedPlayer player, PlayerHome home)
-        {
-            if (home.Transform == null || home.Owner == null)
-            {
-                UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);
-                return false;
-            }
-
-            if (player.Stance == EPlayerStance.DRIVING)
-            {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileDriving"), pluginInstance.MessageColor);
-                return false;
-            }
-
-            if (pluginInstance.TeleportationPlugin != null)
-            {
-                if (!ValitedateRaidAndCombat(player))
-                    return false;
-            }
-            return true;
-        }
-
-        private bool ValitedateRaidAndCombat(UnturnedPlayer player)
-        {
-            TeleportationPlugin teleportation = pluginInstance.TeleportationPlugin as TeleportationPlugin;
-            if (teleportation.IsPlayerInCombat(player.CSteamID))
-            {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileCombat"), pluginInstance.MessageColor);
-                return false;
-            }
-
-            if (teleportation.IsPlayerInRaid(player.CSteamID))
-            {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileRaid"), pluginInstance.MessageColor);
-                return false;
-            }
-            return true;
+            pluginInstance.HomeTeleportations.Add(teleport);
+            teleport.Execute(delay);
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

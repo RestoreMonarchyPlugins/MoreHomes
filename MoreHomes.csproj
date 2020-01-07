@@ -85,6 +85,7 @@
     <Compile Include="Commands\RenameHomeCommand.cs" />
     <Compile Include="Commands\RestoreHomesCommand.cs" />
     <Compile Include="Models\ConvertablePosition.cs" />
+    <Compile Include="Models\HomeTeleport.cs" />
     <Compile Include="Models\PlayerData.cs" />
     <Compile Include="Models\PlayerHome.cs" />
     <Compile Include="MoreHomesPlugin.cs" />
