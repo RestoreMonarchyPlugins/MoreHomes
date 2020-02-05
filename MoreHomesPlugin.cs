@@ -35,7 +35,14 @@ namespace RestoreMonarchy.MoreHomes
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
 
-            Level.onLevelLoaded += (level) => LoadData();
+            if (!Level.isLoaded)
+            {
+                Level.onLevelLoaded += (level) => LoadData();
+            } else
+            {
+                LoadData();
+            }
+
             SaveManager.onPostSave += () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!", ConsoleColor.Yellow);
@@ -94,6 +101,7 @@ namespace RestoreMonarchy.MoreHomes
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
 
             Level.onLevelLoaded -= (level) => LoadData();
+
             SaveManager.onPostSave -= () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
