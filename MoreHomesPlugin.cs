@@ -95,6 +95,8 @@ namespace RestoreMonarchy.MoreHomes
 
         protected override void Unload()
         {
+            DataStorage.SavePlayersData(DataCache);
+
             HarmonyInstance?.UnpatchAll(HarmonyInstanceId);
             HarmonyInstance = null;
 
