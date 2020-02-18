@@ -22,6 +22,7 @@ namespace RestoreMonarchy.MoreHomes
         public List<PlayerData> DataCache { get; set; }
         public Color MessageColor { get; set; }
         public List<HomeTeleport> HomeTeleportations { get; set; }
+        public Dictionary<string, DateTime> PlayerCooldowns { get; set; }
 
         public const string HarmonyInstanceId = "com.restoremonarchy.morehomes";
         private HarmonyInstance HarmonyInstance;
@@ -32,6 +33,7 @@ namespace RestoreMonarchy.MoreHomes
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
             DataStorage = new DataStorage(Directory, "MoreHomesData.json");
             HomeTeleportations = new List<HomeTeleport>();
+            PlayerCooldowns = new Dictionary<string, DateTime>();
             HarmonyInstance = HarmonyInstance.Create(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
 
@@ -86,7 +88,8 @@ namespace RestoreMonarchy.MoreHomes
             { "WhileRaid", "You can't teleport while in raiding" },
             { "WhileCombat", "You can't teleport while in combat" },
             { "RestoreHomesSuccess", "Successfully restored {0} homes!" },
-            { "Cancel", "Your home teleportation was canceled because you moved" }
+            { "Cancel", "Your home teleportation was canceled because you moved" },
+            { "HomeCooldown", "You have to wait {0} seconds to use home again." }
         };
 
         protected override void Unload()

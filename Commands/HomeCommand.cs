@@ -4,12 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.Unturned.Chat;
-using Rocket.Core.Utils;
 using Rocket.Unturned.Player;
-using SDG.Unturned;
-using RestoreMonarchy.Teleportation;
-using RestoreMonarchy.Teleportation.Utils;
-using Steamworks;
+using System;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -28,6 +24,12 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
+            if (pluginInstance.PlayerCooldowns.TryGetValue(caller.Id, out DateTime cooldownExpire) && cooldownExpire > DateTime.Now)
+            {
+                UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)));
+                return;
+            }
+
             float delay = pluginInstance.GetDelay(player.CSteamID.m_SteamID);
             HomeTeleport teleport = new HomeTeleport(home, player);
 
@@ -36,6 +38,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             pluginInstance.HomeTeleportations.Add(teleport);
             teleport.Execute(delay);
+            pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(pluginInstance.GetCooldown(ulong.Parse(caller.Id)));
         }
         
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
