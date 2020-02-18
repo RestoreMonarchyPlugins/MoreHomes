@@ -9,7 +9,7 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using RestoreMonarchy.Teleportation;
 using RestoreMonarchy.Teleportation.Utils;
-using Steamworks;
+using System;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -32,6 +32,12 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (!ValidateTeleportation(player, home))
                 return;
+
+            if (pluginInstance.PlayerCooldowns.TryGetValue(caller.Id, out DateTime cooldownExpire) && cooldownExpire > DateTime.Now)
+            {
+                UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", System.Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)));
+                return;
+            }
 
             if (delay > 0)
             {

@@ -19,6 +19,7 @@ namespace RestoreMonarchy.MoreHomes
         public static MoreHomesPlugin Instance { get; private set; }
         public IRocketPlugin TeleportationPlugin { get; private set; }
         public DataStorage DataStorage { get; set; }
+        public Dictionary<string, DateTime> PlayerCooldowns { get; set; }
         public List<PlayerData> DataCache { get; set; }
         public Color MessageColor { get; set; }
 
@@ -30,6 +31,7 @@ namespace RestoreMonarchy.MoreHomes
             Instance = this;
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
             DataStorage = new DataStorage(Directory, "MoreHomesData.json");
+            PlayerCooldowns = new Dictionary<string, DateTime>();
             HarmonyInstance = HarmonyInstance.Create(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
 
