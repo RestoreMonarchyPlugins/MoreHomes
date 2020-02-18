@@ -36,8 +36,6 @@ namespace RestoreMonarchy.MoreHomes
                 new VIPPermission("morehomes.vip", 3),
                 new VIPPermission("morehomes.star", 4)
             };
-
-
         }
     }
 }

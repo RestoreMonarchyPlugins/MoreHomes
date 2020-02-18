@@ -51,6 +51,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
                 player.Teleport(home.Transform.position, player.Rotation);
                 UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);
+                pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(pluginInstance.GetCooldown(ulong.Parse(caller.Id)));
             }, delay);
         }
 
