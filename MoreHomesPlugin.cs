@@ -39,7 +39,11 @@ namespace RestoreMonarchy.MoreHomes
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
 
-            Level.onLevelLoaded += (level) => LoadData();
+            if (!Level.isLoaded)
+                Level.onLevelLoaded += (level) => LoadData();
+            else
+                LoadData();
+
             SaveManager.onPostSave += () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!", ConsoleColor.Yellow);
@@ -94,6 +98,8 @@ namespace RestoreMonarchy.MoreHomes
 
         protected override void Unload()
         {
+            DataStorage.SavePlayersData(DataCache);
+
             HarmonyInstance?.UnpatchAll(HarmonyInstanceId);
             HarmonyInstance = null;
 
