@@ -27,7 +27,7 @@ namespace RestoreMonarchy.MoreHomes
         private HarmonyInstance HarmonyInstance;
 
         protected override void Load()
-        {
+        {            
             Instance = this;
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
             DataStorage = new DataStorage(Directory, "MoreHomesData.json");

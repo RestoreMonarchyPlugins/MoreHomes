@@ -53,7 +53,7 @@ namespace RestoreMonarchy.MoreHomes.Utilities
             {
                 for (int i = 0; i < region.drops.Count; i++)
                 {
-                    Transform transform = region.drops[i].model;
+                    Transform transform = region.drops[i].interactable.transform;
                     if (transform.position.x == home.Position.X && transform.position.y == home.Position.Y && transform.position.z == home.Position.Z)
                     {
                         home.Transform = transform;

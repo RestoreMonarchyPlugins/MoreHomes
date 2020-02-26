@@ -28,8 +28,6 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            float delay = pluginInstance.GetDelay(player.CSteamID.m_SteamID);
-
             if (!ValidateTeleportation(player, home))
                 return;
 
@@ -38,6 +36,8 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", System.Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)));
                 return;
             }
+
+            float delay = pluginInstance.GetDelay(player.CSteamID.m_SteamID);
 
             if (delay > 0)
             {
