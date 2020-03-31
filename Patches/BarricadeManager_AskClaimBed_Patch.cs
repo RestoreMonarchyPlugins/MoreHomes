@@ -1,9 +1,8 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using Steamworks;
 using System;
-using UnityEngine;
 using RestoreMonarchy.MoreHomes.Utilities;
 
 namespace RestoreMonarchy.MoreHomes.Patches
@@ -17,7 +16,28 @@ namespace RestoreMonarchy.MoreHomes.Patches
             BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion);
             InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;      
             Player player = PlayerTool.getPlayer(steamID);
-            
+
+            if (player == null)
+            {
+                return false;
+            }
+            if (player.life.isDead)
+            {
+                return false;
+            }
+            if ((int)index >= barricadeRegion.drops.Count)
+            {
+                return false;
+            }
+            if (!player.tryToPerformRateLimitedAction())
+            {
+                return false;
+            }
+            if ((barricadeRegion.drops[(int)index].model.transform.position - player.transform.position).sqrMagnitude > 400f)
+            {
+                return false;
+            }
+
             if (interactableBed != null && interactableBed.isClaimable && interactableBed.checkClaim(steamID))
             {
                 if (interactableBed.isClaimed)

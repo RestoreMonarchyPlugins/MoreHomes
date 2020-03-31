@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RestoreMonarchy.MoreHomes.Models;
 using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.API;
@@ -24,7 +24,7 @@ namespace RestoreMonarchy.MoreHomes
         public Color MessageColor { get; set; }
 
         public const string HarmonyInstanceId = "com.restoremonarchy.morehomes";
-        private HarmonyInstance HarmonyInstance;
+        private Harmony HarmonyInstance;
 
         protected override void Load()
         {            
@@ -32,7 +32,7 @@ namespace RestoreMonarchy.MoreHomes
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
             DataStorage = new DataStorage(Directory, "MoreHomesData.json");
             PlayerCooldowns = new Dictionary<string, DateTime>();
-            HarmonyInstance = HarmonyInstance.Create(HarmonyInstanceId);
+            HarmonyInstance = new Harmony(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
