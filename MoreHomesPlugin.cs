@@ -1,4 +1,4 @@
-﻿using Harmony;
+﻿using HarmonyLib;
 using RestoreMonarchy.MoreHomes.Models;
 using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.API;
@@ -25,7 +25,7 @@ namespace RestoreMonarchy.MoreHomes
         public Dictionary<string, DateTime> PlayerCooldowns { get; set; }
 
         public const string HarmonyInstanceId = "com.restoremonarchy.morehomes";
-        private HarmonyInstance HarmonyInstance;
+        private Harmony HarmonyInstance;
 
         protected override void Load()
         {
@@ -34,7 +34,7 @@ namespace RestoreMonarchy.MoreHomes
             DataStorage = new DataStorage(Directory, "MoreHomesData.json");
             HomeTeleportations = new List<HomeTeleport>();
             PlayerCooldowns = new Dictionary<string, DateTime>();
-            HarmonyInstance = HarmonyInstance.Create(HarmonyInstanceId);
+            HarmonyInstance = new Harmony(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
