@@ -1,4 +1,4 @@
-﻿using RestoreMonarchy.MoreHomes.Utilities;
+﻿using RestoreMonarchy.MoreHomes.Models;
 using Rocket.API;
 using System.Collections.Generic;
 
@@ -7,8 +7,8 @@ namespace RestoreMonarchy.MoreHomes
     public class MoreHomesConfiguration : IRocketPluginConfiguration
     {
         public string MessageColor { get; set; }        
-        public double DefaultHomeCooldown { get; set; }
-        public float DefaultHomeDelay { get; set; }
+        public int DefaultHomeCooldown { get; set; }
+        public int DefaultHomeDelay { get; set; }
         public int DefaultMaxHomes { get; set; }        
         public List<VIPPermission> VIPCooldowns { get; set; }
         public List<VIPPermission> VIPDelays { get; set; }

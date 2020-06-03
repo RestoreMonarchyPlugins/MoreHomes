@@ -16,7 +16,19 @@ namespace RestoreMonarchy.MoreHomes.Models
 
         public string Name { get; set; }
         public ConvertablePosition Position { get; set; }
-        
+
+        [JsonIgnore]
+        public Vector3 LivePosition 
+        { 
+            get 
+            {
+                if (Transform != null)
+                    return Transform.position;
+                else
+                    return Position.ToVector3();
+            }
+        }
+
         [JsonIgnore]
         public Transform Transform { get; set; }
         [JsonIgnore]

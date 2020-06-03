@@ -2,7 +2,6 @@
 using Rocket.API;
 using System.Collections.Generic;
 using System.Linq;
-using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.Unturned.Chat;
 using Rocket.Core.Utils;
 using Rocket.Unturned.Player;
@@ -10,6 +9,7 @@ using SDG.Unturned;
 using RestoreMonarchy.Teleportation;
 using RestoreMonarchy.Teleportation.Utils;
 using System;
+using RestoreMonarchy.MoreHomes.Helpers;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -20,7 +20,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
         {
             PlayerHome home;
             UnturnedPlayer player = (UnturnedPlayer)caller;
-            home = pluginInstance.DataCache.GetPlayerBed(player.CSteamID.m_SteamID, command.ElementAtOrDefault(0));
+            home = HomesHelper.GetPlayerHome(player.CSteamID, command.ElementAtOrDefault(0));
 
             if (home == null)
             {
@@ -37,7 +37,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            float delay = pluginInstance.GetDelay(player.CSteamID.m_SteamID);
+            float delay = VipHelper.GetPlayerHomeDelay(player.Id);
 
             if (delay > 0)
             {
@@ -51,7 +51,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
                 player.Teleport(home.Transform.position, player.Rotation);
                 UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);
-                pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(pluginInstance.GetCooldown(ulong.Parse(caller.Id)));
+                pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(VipHelper.GetPlayerHomeCooldown(caller.Id));
             }, delay);
         }
 

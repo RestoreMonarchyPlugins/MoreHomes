@@ -1,8 +1,8 @@
 ﻿using Rocket.API;
 using SDG.Unturned;
 using System.Collections.Generic;
-using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.Unturned.Chat;
+using RestoreMonarchy.MoreHomes.Helpers;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -12,6 +12,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
         public void Execute(IRocketPlayer caller, string[] command)
         {
             int num = 0;
+            HomesHelper.ClearHomes();
             foreach (BarricadeRegion region in BarricadeManager.regions)
             {
                 foreach (BarricadeDrop drop in region.drops)
@@ -19,15 +20,12 @@ namespace RestoreMonarchy.MoreHomes.Commands
                     InteractableBed bed = drop.interactable as InteractableBed;
                     if (bed != null && bed.isClaimed)
                     {
-                        if (!pluginInstance.DataCache.Exists(x => x.Homes.Exists(y => y.Transform == bed.transform)))
-                        {
-                            pluginInstance.DataCache.ClaimBed(bed.owner.m_SteamID, bed.transform);
-                            num++;
-                        }
+                        HomesHelper.TryClaimHome(bed.owner, bed.transform);
+                        num++;
                     }
                 }
             }
-
+            pluginInstance.DataService.SaveData();
             UnturnedChat.Say(caller, pluginInstance.Translate("RestoreHomesSuccess", num), pluginInstance.MessageColor);
         }
 
@@ -35,9 +33,9 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         public string Name => "restorehomes";
 
-        public string Help => "Teleports player to their bed";
+        public string Help => "Clears and readds all homes on the map";
 
-        public string Syntax => "[HomeName]";
+        public string Syntax => "";
 
         public List<string> Aliases => new List<string>();
 

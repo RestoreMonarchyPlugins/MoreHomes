@@ -2,8 +2,7 @@
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using System.Collections.Generic;
-using RestoreMonarchy.MoreHomes.Utilities;
-using RestoreMonarchy.MoreHomes.Models;
+using RestoreMonarchy.MoreHomes.Helpers;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -19,21 +18,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 UnturnedChat.Say(caller, pluginInstance.Translate("RenameHomeFormat"));
                 return;
             }
-
-            PlayerHome home = pluginInstance.DataCache.GetPlayerBed(player.CSteamID.m_SteamID, command[0]);
-
-            if (home == null)
-            {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeNotFound", command[0]), pluginInstance.MessageColor);
-                return;
-            }
-
-            if (!pluginInstance.DataCache.RenameBed(home, command[1]))
-            {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeAlreadyExists", command[1]));
-                return;
-            }
-            UnturnedChat.Say(caller, pluginInstance.Translate("RenameHomeSuccess", command[0], command[1]), pluginInstance.MessageColor);
+            HomesHelper.TryRenameHome(player.CSteamID, command[0], command[1]);
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
@@ -42,7 +27,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         public string Help => "Changes home's name to a new one";
 
-        public string Syntax => "<HomeName> <NewName>";
+        public string Syntax => "<OldName> <NewName>";
 
         public List<string> Aliases => new List<string>();
 

@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
-using RestoreMonarchy.MoreHomes.Models;
-using RestoreMonarchy.MoreHomes.Utilities;
+using RestoreMonarchy.MoreHomes.Services;
 using Rocket.API;
 using Rocket.API.Collections;
 using Rocket.Core;
@@ -18,9 +17,11 @@ namespace RestoreMonarchy.MoreHomes
     {        
         public static MoreHomesPlugin Instance { get; private set; }
         public IRocketPlugin TeleportationPlugin { get; private set; }
-        public DataStorage DataStorage { get; set; }
+
         public Dictionary<string, DateTime> PlayerCooldowns { get; set; }
-        public List<PlayerData> DataCache { get; set; }
+
+        public DataService DataService { get; private set; }
+
         public Color MessageColor { get; set; }
 
         public const string HarmonyInstanceId = "com.restoremonarchy.morehomes";
@@ -30,22 +31,15 @@ namespace RestoreMonarchy.MoreHomes
         {            
             Instance = this;
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
-            DataStorage = new DataStorage(Directory, "MoreHomesData.json");
+
             PlayerCooldowns = new Dictionary<string, DateTime>();
+            
             HarmonyInstance = new Harmony(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
 
+            DataService = gameObject.AddComponent<DataService>();
+
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
-
-            if (!Level.isLoaded)
-            {
-                Level.onLevelLoaded += (level) => LoadData();
-            } else
-            {
-                LoadData();
-            }
-
-            SaveManager.onPostSave += () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} {Assembly.GetName().Version} has been loaded!", ConsoleColor.Yellow);
             Logger.Log("Brought to you by RestoreMonarchy.com", ConsoleColor.Yellow);
@@ -58,20 +52,6 @@ namespace RestoreMonarchy.MoreHomes
             {   
                 TeleportationPlugin = plugin;
             }
-        }
-
-        private void LoadData()
-        {
-            Logger.Log($"Loading Players data...", ConsoleColor.Yellow);
-            if (DataStorage.LoadPlayersData(out List<PlayerData> data))
-            {
-                DataCache = data;
-            } else
-            {
-                UnloadPlugin(PluginState.Cancelled);
-                return;
-            }
-            Logger.Log($"Successfully loaded {DataCache.Count} Players!", ConsoleColor.Yellow);
         }
 
         public override TranslationList DefaultTranslations => new TranslationList(){
@@ -97,16 +77,10 @@ namespace RestoreMonarchy.MoreHomes
 
         protected override void Unload()
         {
-            DataStorage.SavePlayersData(DataCache);
-
             HarmonyInstance?.UnpatchAll(HarmonyInstanceId);
             HarmonyInstance = null;
 
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
-
-            Level.onLevelLoaded -= (level) => LoadData();
-
-            SaveManager.onPostSave -= () => DataStorage.SavePlayersData(DataCache);
 
             Logger.Log($"{Name} has been unloaded!", ConsoleColor.Yellow);
         }

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace RestoreMonarchy.MoreHomes.Models
 {
@@ -14,6 +16,16 @@ namespace RestoreMonarchy.MoreHomes.Models
             PlayerId = playerId;
             DefaultHomeName = "bed";
             Homes = new List<PlayerHome>();
+        }
+
+        public string GetUniqueHomeName()
+        {
+            int num = 1;
+            while (Homes.Exists(x => x.Name.Equals(DefaultHomeName + num, StringComparison.OrdinalIgnoreCase)))
+            {
+                num++;
+            }
+            return DefaultHomeName + num;
         }
 
         public ulong PlayerId { get; set; }

@@ -3,9 +3,9 @@ using Rocket.Unturned.Player;
 using SDG.Unturned;
 using System.Collections.Generic;
 using System.Linq;
-using RestoreMonarchy.MoreHomes.Utilities;
 using Rocket.Unturned.Chat;
 using RestoreMonarchy.MoreHomes.Models;
+using RestoreMonarchy.MoreHomes.Helpers;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -24,14 +24,16 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            PlayerHome home = pluginInstance.DataCache.GetPlayerBed(player.CSteamID.m_SteamID, homeName);
+            PlayerHome home = HomesHelper.GetPlayerHome(player.CSteamID, homeName);
             if (home == null)
             {
                 UnturnedChat.Say(caller, pluginInstance.Translate("HomeNotFound", home.Name), pluginInstance.MessageColor);
                 return;
             }
 
-            pluginInstance.DataCache.DestroyBed(home.Transform);
+            if (HomesHelper.TryRemoveHome(player.CSteamID, home.Transform))
+                return;
+
             BarricadeManager.tryGetInfo(home.Transform, out byte b, out byte b2, out ushort num, out ushort num2, out _);
             BarricadeManager.instance.channel.send("tellTakeBarricade", ESteamCall.ALL, b, b2, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {

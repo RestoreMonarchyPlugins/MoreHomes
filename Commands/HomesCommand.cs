@@ -1,13 +1,10 @@
-﻿using RestoreMonarchy.MoreHomes.Models;
-using RestoreMonarchy.MoreHomes.Utilities;
+﻿using RestoreMonarchy.MoreHomes.Helpers;
+using RestoreMonarchy.MoreHomes.Models;
 using Rocket.API;
 using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -18,7 +15,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
         {
             UnturnedPlayer player = (UnturnedPlayer)caller;
             
-            PlayerData playerData = pluginInstance.DataCache.GetPlayer(player.CSteamID.m_SteamID);
+            PlayerData playerData = HomesHelper.GetOrCreatePlayer(player.CSteamID);
 
             if (playerData.Homes.Count == 0)
             {

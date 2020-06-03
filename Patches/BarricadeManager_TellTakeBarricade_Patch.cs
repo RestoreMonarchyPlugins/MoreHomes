@@ -1,5 +1,5 @@
 ﻿using HarmonyLib;
-using RestoreMonarchy.MoreHomes.Utilities;
+using RestoreMonarchy.MoreHomes.Helpers;
 using SDG.Unturned;
 using Steamworks;
 
@@ -13,10 +13,10 @@ namespace RestoreMonarchy.MoreHomes.Patches
         {            
             if (BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion))
             {
-                InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;
+                InteractableBed interactableBed = barricadeRegion.drops[index].interactable as InteractableBed;
                 if (interactableBed != null)
                 {
-                    MoreHomesPlugin.Instance.DataCache.DestroyBed(interactableBed.transform);
+                    HomesHelper.TryRemoveHome(interactableBed.owner, interactableBed.transform);
                 }
             }            
         }
