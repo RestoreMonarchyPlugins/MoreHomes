@@ -33,24 +33,24 @@ namespace RestoreMonarchy.MoreHomes.Helpers
             return player.Homes.FirstOrDefault(x => name == null || x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static bool TryClaimHome(CSteamID steamID, Transform transform)
+        public static bool TryClaimHome(CSteamID steamID, InteractableBed interactableBed)
         {
             var player = GetOrCreatePlayer(steamID);
             if (player.Homes.Count >= VipHelper.GetPlayerMaxHomes(steamID.ToString()))
             {
-                UnturnedChat.Say(steamID, pluginInstance.Translate("MaxHomes"), pluginInstance.MessageColor);
+                UnturnedChat.Say(steamID, pluginInstance.Translate("MaxHomesWarn"), pluginInstance.MessageColor);
                 return false;
             }
-            var home = new PlayerHome(player.GetUniqueHomeName(), transform, player);
+            var home = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
             player.Homes.Add(home);
-            UnturnedChat.Say(steamID, pluginInstance.Translate("Home", home.Name), pluginInstance.MessageColor);
+            UnturnedChat.Say(steamID, pluginInstance.Translate("HomeClaimed", home.Name), pluginInstance.MessageColor);
             return true;
         }
 
-        public static bool TryRemoveHome(CSteamID steamID, Transform transform)
+        public static bool TryRemoveHome(CSteamID steamID, InteractableBed interactableBed)
         {
             var player = GetOrCreatePlayer(steamID);
-            var home = player.Homes.FirstOrDefault(x => x.Transform == transform);
+            var home = player.Homes.FirstOrDefault(x => x.InteractableBed == interactableBed);
             if (home != null)
             {
                 player.Homes.Remove(home);

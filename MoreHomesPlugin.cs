@@ -28,7 +28,7 @@ namespace RestoreMonarchy.MoreHomes
         private Harmony HarmonyInstance;
 
         protected override void Load()
-        {            
+        {
             Instance = this;
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
 
@@ -55,15 +55,16 @@ namespace RestoreMonarchy.MoreHomes
         }
 
         public override TranslationList DefaultTranslations => new TranslationList(){
-            { "HomeCooldownWarn", "You have to wait {0} to use this command again" },
-            { "HomeDelayWarn", "You will be teleported to your bed in {0} seconds" },
-            { "MaxHomesWarn", "You cannot have more beds" },
-            { "NoBedsToTeleport", "You don't have any bed to teleport or name doesn't match any" },
-            { "BedDestroyed", "Your bed got destroyed. Teleportation canceled" },
+
+            { "HomeCooldown", "You have to wait {0} to use this command again" },
+            { "HomeDelayWarn", "You will be teleported to your home in {0} seconds" },
+            { "MaxHomesWarn", "You cannot have more homes" },
+            { "BedDestroyed", "Your home got destroyed. Teleportation canceled" },
             { "WhileDriving", "You cannot teleport while driving" },
-            { "HomeSuccess", "Successfully teleported You to your {0} bed!" },
-            { "HomeList", "Your beds: " },
-            { "NoHomes", "You don't have any bed claimed" },
+            { "NoHome", "You don't have any home to teleport or name doesn't match any" },
+            { "HomeSuccess", "Successfully teleported You to your {0} home!" },
+            { "HomeList", "Your homes: " },
+            { "NoHomes", "You don't have any home" },
             { "DestroyHomeFormat", "Format: /destroyhome <BedName>" },
             { "HomeNotFound", "No home match {0} name" },
             { "DestroyHomeSuccess", "Successfully destroyed and unclaimed your {0} home!" },
@@ -72,7 +73,13 @@ namespace RestoreMonarchy.MoreHomes
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
             { "WhileRaid", "You can't teleport while in raiding" },
             { "WhileCombat", "You can't teleport while in combat" },
-            { "RestoreHomesSuccess", "Successfully restored {0} homes!" }
+            { "RestoreHomesSuccess", "Successfully restored {0} homes!" },
+            { "RemoveHome", "Your {0} home got removed!" },
+            { "RemoveHomeFail", "Failed to remove your home" },
+            { "RenameHomeFail", "You already have home named {0}" },
+            { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
+            { "HomeClaimed", "Your new home name: {0}" },
+            { "HomeFailed", "Failed to teleport you to {0} home" }
         };
 
         protected override void Unload()

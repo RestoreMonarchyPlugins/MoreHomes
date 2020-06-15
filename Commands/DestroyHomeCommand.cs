@@ -6,6 +6,7 @@ using System.Linq;
 using Rocket.Unturned.Chat;
 using RestoreMonarchy.MoreHomes.Models;
 using RestoreMonarchy.MoreHomes.Helpers;
+using Steamworks;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -31,18 +32,14 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            if (HomesHelper.TryRemoveHome(player.CSteamID, home.Transform))
+            if (!HomesHelper.TryRemoveHome(player.CSteamID, home.InteractableBed))
                 return;
 
-            BarricadeManager.tryGetInfo(home.Transform, out byte b, out byte b2, out ushort num, out ushort num2, out _);
-            BarricadeManager.instance.channel.send("tellTakeBarricade", ESteamCall.ALL, b, b2, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
-                {
-                    b,
-                    b2,
-                    num,
-                    num2
-                });
-            UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeSuccess", home.Name), pluginInstance.MessageColor);
+            if (BarricadeManager.tryGetInfo(home.InteractableBed.transform, out var x, out var y, out var plant, out var index, out var region))
+            {
+                BarricadeManager.destroyBarricade(region, x, y, plant, index);
+                UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeSuccess", home.Name), pluginInstance.MessageColor);
+            }
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

@@ -17,7 +17,6 @@ namespace RestoreMonarchy.MoreHomes.Services
         void Awake()
         {
             PlayersDataStorage = new DataStorage<List<PlayerData>>(pluginInstance.Directory, "MoreHomesData.json");
-
             SaveManager.onPostSave += SaveData;
         }
 
@@ -42,14 +41,14 @@ namespace RestoreMonarchy.MoreHomes.Services
             if (PlayersData == null)
                 PlayersData = new List<PlayerData>();
 
-            List<InteractableBed> beds = new List<InteractableBed>();
+            var interactableBeds = new List<InteractableBed>();
 
             foreach (var region in BarricadeManager.regions)
             {
                 foreach (var drop in region.drops)
                 {
                     if (drop.interactable as InteractableBed != null)
-                        beds.Add(drop.interactable as InteractableBed);
+                        interactableBeds.Add(drop.interactable as InteractableBed);
                 }
             }
 
@@ -57,13 +56,14 @@ namespace RestoreMonarchy.MoreHomes.Services
             {
                 foreach (var home in player.Homes)
                 {
-                    foreach (var bed in beds)
+                    foreach (var interactableBed in interactableBeds)
                     {
-                        if (bed.transform.position.x == home.Position.X && bed.transform.position.y == home.Position.Y 
-                            && bed.transform.position.z == home.Position.Z)
+                        if (interactableBed.transform.position.x == home.Position.X && interactableBed.transform.position.y == home.Position.Y 
+                            && interactableBed.transform.position.z == home.Position.Z)
                         {
-                            home.Transform = bed.transform;
-                            beds.Remove(bed);
+                            System.Console.WriteLine("Equal bed found!");
+                            home.InteractableBed = interactableBed;
+                            interactableBeds.Remove(interactableBed);
                             break;
                         }
                     }

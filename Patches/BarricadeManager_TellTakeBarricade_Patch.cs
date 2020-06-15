@@ -16,7 +16,7 @@ namespace RestoreMonarchy.MoreHomes.Patches
                 InteractableBed interactableBed = barricadeRegion.drops[index].interactable as InteractableBed;
                 if (interactableBed != null)
                 {
-                    HomesHelper.TryRemoveHome(interactableBed.owner, interactableBed.transform);
+                    HomesHelper.TryRemoveHome(interactableBed.owner, interactableBed);
                 }
             }            
         }

@@ -37,15 +37,11 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				{
 					if (interactableBed.isClaimed)
 					{
-						#region AddHome
+						#region RemoveHome
 
-						if (HomesHelper.TryClaimHome(steamID, interactableBed.transform))
-						{
-							return false;
-						}
+						HomesHelper.TryRemoveHome(steamID, interactableBed);
 
 						#endregion
-
 
                         if (plant == 65535)
 						{
@@ -72,11 +68,15 @@ namespace RestoreMonarchy.MoreHomes.Patches
 					}
 					else
 					{
-						#region RemoveHome
+						#region AddHome
 
-						HomesHelper.TryRemoveHome(steamID, interactableBed.transform);
-						
+						if (!HomesHelper.TryClaimHome(steamID, interactableBed))
+						{
+							return false;
+						}
+
 						#endregion
+
 						BarricadeManager.unclaimBeds(player.channel.owner.playerID.steamID);
 						if (plant == 65535)
 						{

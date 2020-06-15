@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using SDG.Unturned;
 using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Models
@@ -6,12 +7,11 @@ namespace RestoreMonarchy.MoreHomes.Models
     public class PlayerHome
     {
         public PlayerHome() { }
-        public PlayerHome(string name, Transform transform, PlayerData owner)
+        public PlayerHome(string name, InteractableBed interactableBed)
         {
             Name = name;
-            Transform = transform;
-            Position = new ConvertablePosition(Transform.position);
-            Owner = owner;
+            InteractableBed = interactableBed;
+            Position = new ConvertablePosition(InteractableBed.transform.position);
         }
 
         public string Name { get; set; }
@@ -22,16 +22,14 @@ namespace RestoreMonarchy.MoreHomes.Models
         { 
             get 
             {
-                if (Transform != null)
-                    return Transform.position;
+                if (InteractableBed != null)
+                    return InteractableBed.transform.position;
                 else
                     return Position.ToVector3();
             }
         }
 
         [JsonIgnore]
-        public Transform Transform { get; set; }
-        [JsonIgnore]
-        public PlayerData Owner { get; set; }
+        public InteractableBed InteractableBed { get; set; }
     }
 }

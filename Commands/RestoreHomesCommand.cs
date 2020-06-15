@@ -17,10 +17,10 @@ namespace RestoreMonarchy.MoreHomes.Commands
             {
                 foreach (BarricadeDrop drop in region.drops)
                 {
-                    InteractableBed bed = drop.interactable as InteractableBed;
-                    if (bed != null && bed.isClaimed)
+                    InteractableBed interactableBed = drop.interactable as InteractableBed;
+                    if (interactableBed != null && interactableBed.isClaimed)
                     {
-                        HomesHelper.TryClaimHome(bed.owner, bed.transform);
+                        HomesHelper.TryClaimHome(interactableBed.owner, interactableBed);
                         num++;
                     }
                 }

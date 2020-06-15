@@ -10,6 +10,7 @@ using RestoreMonarchy.Teleportation;
 using RestoreMonarchy.Teleportation.Utils;
 using System;
 using RestoreMonarchy.MoreHomes.Helpers;
+using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -24,7 +25,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (home == null)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("NoBedsToTeleport"), pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, pluginInstance.Translate("NoHomeToTeleport"), pluginInstance.MessageColor);
                 return;
             }
 
@@ -37,6 +38,8 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
+            pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(VipHelper.GetPlayerHomeCooldown(caller.Id));
+
             float delay = VipHelper.GetPlayerHomeDelay(player.Id);
 
             if (delay > 0)
@@ -47,17 +50,24 @@ namespace RestoreMonarchy.MoreHomes.Commands
             TaskDispatcher.QueueOnMainThread(() =>
             {
                 if (!ValidateTeleportation(player, home))
+                {
+                    pluginInstance.PlayerCooldowns.Remove(caller.Id);
                     return;
+                }
 
-                player.Teleport(home.Transform.position, player.Rotation);
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);
-                pluginInstance.PlayerCooldowns[caller.Id] = DateTime.Now.AddSeconds(VipHelper.GetPlayerHomeCooldown(caller.Id));
+                if (!player.Player.teleportToLocation(home.LivePosition + new Vector3(0f, 0.5f, 0f), player.Rotation))
+                {
+                    UnturnedChat.Say(caller, pluginInstance.Translate("HomeFailed", home.Name), pluginInstance.MessageColor);
+                    pluginInstance.PlayerCooldowns.Remove(caller.Id);
+                    return;
+                }
+                UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);                
             }, delay);
         }
 
         private bool ValidateTeleportation(UnturnedPlayer player, PlayerHome home)
         {
-            if (home.Transform == null || home.Owner == null)
+            if (home.InteractableBed == null)
             {
                 UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);
                 return false;
