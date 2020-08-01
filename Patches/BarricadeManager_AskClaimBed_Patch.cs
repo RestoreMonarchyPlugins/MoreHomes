@@ -77,7 +77,8 @@ namespace RestoreMonarchy.MoreHomes.Patches
 
 						#endregion
 
-						BarricadeManager.unclaimBeds(player.channel.owner.playerID.steamID);
+						// THIS HAS TO BE COMMENT OUT
+						//BarricadeManager.unclaimBeds(player.channel.owner.playerID.steamID);
 						if (plant == 65535)
 						{
 							BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]

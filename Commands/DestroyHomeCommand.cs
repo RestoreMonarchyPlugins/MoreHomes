@@ -35,11 +35,11 @@ namespace RestoreMonarchy.MoreHomes.Commands
             if (!HomesHelper.TryRemoveHome(player.CSteamID, home.InteractableBed))
                 return;
 
-            if (BarricadeManager.tryGetInfo(home.InteractableBed.transform, out var x, out var y, out var plant, out var index, out var region))
-            {
+            BarricadeManager.tryGetInfo(home.InteractableBed.transform, out var x, out var y, out var plant, out var index, out var region);
+            if (home.InteractableBed != null)
                 BarricadeManager.destroyBarricade(region, x, y, plant, index);
-                UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeSuccess", home.Name), pluginInstance.MessageColor);
-            }
+
+            UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeSuccess", home.Name), pluginInstance.MessageColor);
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

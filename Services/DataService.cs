@@ -61,7 +61,6 @@ namespace RestoreMonarchy.MoreHomes.Services
                         if (interactableBed.transform.position.x == home.Position.X && interactableBed.transform.position.y == home.Position.Y 
                             && interactableBed.transform.position.z == home.Position.Z)
                         {
-                            System.Console.WriteLine("Equal bed found!");
                             home.InteractableBed = interactableBed;
                             interactableBeds.Remove(interactableBed);
                             break;
@@ -77,6 +76,8 @@ namespace RestoreMonarchy.MoreHomes.Services
             {
                 foreach (var home in player.Homes)
                 {
+                    if (home == null || home.InteractableBed == null)
+                        continue;
                     home.Position = new ConvertablePosition(home.LivePosition);
                 }
             }
