@@ -32,8 +32,10 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            if (!HomesHelper.TryRemoveHome(player.CSteamID, home.InteractableBed))
+            if (!HomesHelper.TryRemoveHome(player.CSteamID, home.InteractableBed) || home.InteractableBed == null)
                 return;
+
+
 
             BarricadeManager.tryGetInfo(home.InteractableBed.transform, out var x, out var y, out var plant, out var index, out var region);
             if (home.InteractableBed != null)
