@@ -55,7 +55,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                     return;
                 }
 
-                if (!player.Player.teleportToLocation(home.LivePosition + new Vector3(0f, 0.5f, 0f), player.Rotation))
+                if (!player.Player.teleportToLocation(home.LivePosition + new Vector3(0f, pluginInstance.Configuration.Instance.TeleportHeight, 0f), player.Rotation))
                 {
                     UnturnedChat.Say(caller, pluginInstance.Translate("HomeFailed", home.Name), pluginInstance.MessageColor);
                     pluginInstance.PlayerCooldowns.Remove(caller.Id);

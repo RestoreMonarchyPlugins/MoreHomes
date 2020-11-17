@@ -9,7 +9,8 @@ namespace RestoreMonarchy.MoreHomes
         public string MessageColor { get; set; }        
         public int DefaultHomeCooldown { get; set; }
         public int DefaultHomeDelay { get; set; }
-        public int DefaultMaxHomes { get; set; }        
+        public int DefaultMaxHomes { get; set; }
+        public float TeleportHeight { get; set; }
         public List<VIPPermission> VIPCooldowns { get; set; }
         public List<VIPPermission> VIPDelays { get; set; }
         public List<VIPPermission> VIPMaxHomes { get; set; }
@@ -20,6 +21,7 @@ namespace RestoreMonarchy.MoreHomes
             DefaultHomeCooldown = 20;
             DefaultHomeDelay = 10;
             DefaultMaxHomes = 2;
+            TeleportHeight = 0.5f;
 
             VIPCooldowns = new List<VIPPermission>()
             {
