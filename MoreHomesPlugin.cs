@@ -59,16 +59,16 @@ namespace RestoreMonarchy.MoreHomes
             { "HomeCooldown", "You have to wait {0} to use this command again" },
             { "HomeDelayWarn", "You will be teleported to your home in {0} seconds" },
             { "MaxHomesWarn", "You cannot have more homes" },
-            { "BedDestroyed", "Your home got destroyed. Teleportation canceled" },
+            { "BedDestroyed", "Your home got destroyed! Teleportation canceled" },
             { "WhileDriving", "You cannot teleport while driving" },
             { "NoHome", "You don't have any home to teleport or name doesn't match any" },
             { "HomeSuccess", "Successfully teleported You to your {0} home!" },
-            { "HomeList", "Your homes: " },
+            { "HomeList", "Your homes [{0}/{1}]: " },
             { "NoHomes", "You don't have any home" },
-            { "DestroyHomeFormat", "Format: /destroyhome <BedName>" },
+            { "DestroyHomeFormat", "Format: /destroyhome <name>" },
             { "HomeNotFound", "No home match {0} name" },
             { "DestroyHomeSuccess", "Successfully destroyed and unclaimed your {0} home!" },
-            { "RenameHomeFormat", "Format: /renamehome <HomeName> <NewName>" },
+            { "RenameHomeFormat", "Format: /renamehome <name> <rename>" },
             { "HomeAlreadyExists", "You already have a home named {0}" },
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
             { "WhileRaid", "You can't teleport while in raiding" },
@@ -78,8 +78,9 @@ namespace RestoreMonarchy.MoreHomes
             { "RemoveHomeFail", "Failed to remove your home" },
             { "RenameHomeFail", "You already have home named {0}" },
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
-            { "HomeClaimed", "Your new home name: {0}" },
-            { "HomeFailed", "Failed to teleport you to {0} home" }
+            { "HomeClaimed", "Your new claimed home name is {0}" },
+            { "HomeTeleportationFailed", "Failed to teleport you to {0} home" },
+            { "HomeDestroyed", "Your home {0} got destroyed!" }
         };
 
         protected override void Unload()

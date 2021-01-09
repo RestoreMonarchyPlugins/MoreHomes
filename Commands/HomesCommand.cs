@@ -23,7 +23,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 return;
             }
 
-            StringBuilder sb = new StringBuilder(pluginInstance.Translate("HomeList"));
+            StringBuilder sb = new StringBuilder(pluginInstance.Translate("HomeList", playerData.Homes.Count, VipHelper.GetPlayerMaxHomes(player.Id)));
             
             foreach (PlayerHome home in playerData.Homes)
             {

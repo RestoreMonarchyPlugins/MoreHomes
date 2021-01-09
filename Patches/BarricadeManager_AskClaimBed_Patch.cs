@@ -3,6 +3,8 @@ using SDG.Unturned;
 using Steamworks;
 using System;
 using RestoreMonarchy.MoreHomes.Helpers;
+using RestoreMonarchy.MoreHomes.Models;
+using Rocket.Unturned.Chat;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
@@ -37,76 +39,35 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				{
 					if (interactableBed.isClaimed)
 					{
-						#region RemoveHome
-
-						HomesHelper.TryRemoveHome(steamID, interactableBed);
-
-						#endregion
-
-                        if (plant == 65535)
-						{
-							BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
-							{
-								x,
-								y,
-								plant,
-								index,
-								CSteamID.Nil
-							});
-						}
-						else
-						{
-							BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
-							{
-								x,
-								y,
-								plant,
-								index,
-								CSteamID.Nil
-							});
-						}
+						var home = HomesHelper.GetPlayerHome(steamID, interactableBed);
+						HomesHelper.RemoveHome(steamID, home);
+						home.Unclaim();
 					}
 					else
 					{
-						#region AddHome
-
-						if (!HomesHelper.TryClaimHome(steamID, interactableBed))
-						{
+						var playerData = HomesHelper.GetOrCreatePlayer(steamID);
+						int maxHomes = VipHelper.GetPlayerMaxHomes(steamID.ToString());
+						if (maxHomes == 1 && playerData.Homes.Count == 1)
+                        {
+							foreach (var home in playerData.Homes.ToArray())
+                            {
+								HomesHelper.RemoveHome(steamID, home);
+								home.Unclaim();
+                            }
+                        } else if (maxHomes <= playerData.Homes.Count)
+                        {
+							UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("MaxHomesWarn"), MoreHomesPlugin.Instance.MessageColor);
 							return false;
 						}
 
-						#endregion
-
-						// THIS HAS TO BE COMMENT OUT
-						//BarricadeManager.unclaimBeds(player.channel.owner.playerID.steamID);
-						if (plant == 65535)
-						{
-							BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
-							{
-								x,
-								y,
-								plant,
-								index,
-								player.channel.owner.playerID.steamID
-							});
-						}
-						else
-						{
-							BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
-							{
-								x,
-								y,
-								plant,
-								index,
-								player.channel.owner.playerID.steamID
-							});
-						}
+						var playerHome = new PlayerHome(playerData.GetUniqueHomeName(), interactableBed);
+						playerData.Homes.Add(playerHome);
+						playerHome.Claim(steamID);
+						UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("HomeClaimed", playerHome.Name), MoreHomesPlugin.Instance.MessageColor);
 					}
-					BitConverter.GetBytes(interactableBed.owner.m_SteamID).CopyTo(barricadeRegion.barricades[index].barricade.state, 0);
 				}
 			}
-			return true;
-
+			return false;
 		}
     }
 }

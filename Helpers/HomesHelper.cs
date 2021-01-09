@@ -33,56 +33,16 @@ namespace RestoreMonarchy.MoreHomes.Helpers
             return player.Homes.FirstOrDefault(x => name == null || x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
-        public static bool TryClaimHome(CSteamID steamID, InteractableBed interactableBed)
+        public static PlayerHome GetPlayerHome(CSteamID steamID, InteractableBed interactableBed)
         {
             var player = GetOrCreatePlayer(steamID);
-            if (player.Homes.Count >= VipHelper.GetPlayerMaxHomes(steamID.ToString()))
-            {
-                UnturnedChat.Say(steamID, pluginInstance.Translate("MaxHomesWarn"), pluginInstance.MessageColor);
-                return false;
-            }
-            var home = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
-            player.Homes.Add(home);
-            UnturnedChat.Say(steamID, pluginInstance.Translate("HomeClaimed", home.Name), pluginInstance.MessageColor);
-            return true;
-        }
+            return player.Homes.FirstOrDefault(x => x.InteractableBed == interactableBed);
+        } 
 
-        public static bool TryRemoveHome(CSteamID steamID, InteractableBed interactableBed)
+        public static bool RemoveHome(CSteamID steamID, PlayerHome playerHome)
         {
             var player = GetOrCreatePlayer(steamID);
-            var home = player.Homes.FirstOrDefault(x => x.InteractableBed == interactableBed);
-            if (home != null)
-            {
-                player.Homes.Remove(home);
-                UnturnedChat.Say(steamID, pluginInstance.Translate("RemoveHome", home.Name), pluginInstance.MessageColor);
-                return true;
-            } else
-            {
-                UnturnedChat.Say(steamID, pluginInstance.Translate("RemoveHomeFail"), pluginInstance.MessageColor);
-            }
-            return false;
-        }
-
-        public static bool TryRenameHome(CSteamID steamID, string oldName, string newName)
-        {
-            var home = GetPlayerHome(steamID, oldName);
-            if (home != null)
-            {
-                if (GetPlayerHome(steamID, newName) != null)
-                {
-                    UnturnedChat.Say(steamID, pluginInstance.Translate("RenameHomeFail", newName), pluginInstance.MessageColor);
-                    return false;
-                }
-
-                home.Name = newName;
-                UnturnedChat.Say(steamID, pluginInstance.Translate("RenameHomeSuccess", oldName, newName), pluginInstance.MessageColor);
-                return true;
-            }
-            else
-            {
-                UnturnedChat.Say(steamID, pluginInstance.Translate("HomeNotFound", newName), pluginInstance.MessageColor);
-                return false;
-            }
+            return player.Homes.Remove(playerHome);
         }
 
         public static void ClearHomes()

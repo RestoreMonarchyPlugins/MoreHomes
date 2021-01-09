@@ -3,6 +3,7 @@ using SDG.Unturned;
 using System.Collections.Generic;
 using Rocket.Unturned.Chat;
 using RestoreMonarchy.MoreHomes.Helpers;
+using RestoreMonarchy.MoreHomes.Models;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -20,7 +21,9 @@ namespace RestoreMonarchy.MoreHomes.Commands
                     InteractableBed interactableBed = drop.interactable as InteractableBed;
                     if (interactableBed != null && interactableBed.isClaimed)
                     {
-                        HomesHelper.TryClaimHome(interactableBed.owner, interactableBed);
+                        var player = HomesHelper.GetOrCreatePlayer(interactableBed.owner);
+                        var playerHome = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
+                        player.Homes.Add(playerHome);
                         num++;
                     }
                 }

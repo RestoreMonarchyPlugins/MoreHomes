@@ -25,7 +25,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (home == null)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("NoHomeToTeleport"), pluginInstance.MessageColor);
+                UnturnedChat.Say(caller, pluginInstance.Translate("NoHome"), pluginInstance.MessageColor);
                 return;
             }
 
@@ -34,7 +34,8 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (pluginInstance.PlayerCooldowns.TryGetValue(caller.Id, out DateTime cooldownExpire) && cooldownExpire > DateTime.Now)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", System.Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)));
+                UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", System.Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)), 
+                    pluginInstance.MessageColor);
                 return;
             }
 
@@ -57,7 +58,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
                 if (!player.Player.teleportToLocation(home.LivePosition + new Vector3(0f, pluginInstance.Configuration.Instance.TeleportHeight, 0f), player.Rotation))
                 {
-                    UnturnedChat.Say(caller, pluginInstance.Translate("HomeFailed", home.Name), pluginInstance.MessageColor);
+                    UnturnedChat.Say(caller, pluginInstance.Translate("HomeTeleportationFailed", home.Name), pluginInstance.MessageColor);
                     pluginInstance.PlayerCooldowns.Remove(caller.Id);
                     return;
                 }
@@ -67,9 +68,10 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         private bool ValidateTeleportation(UnturnedPlayer player, PlayerHome home)
         {
-            if (home.InteractableBed == null)
-            {                
-                UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);
+            if (home.InteractableBed == null || home.InteractableBed.owner != player.CSteamID)
+            {
+                HomesHelper.RemoveHome(player.CSteamID, home);
+                UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);                
                 return false;
             }
 
@@ -110,7 +112,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         public string Help => "Teleports player to their bed";
 
-        public string Syntax => "[HomeName]";
+        public string Syntax => "[name]";
 
         public List<string> Aliases => new List<string>();
 
