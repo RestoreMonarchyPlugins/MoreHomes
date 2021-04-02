@@ -42,25 +42,28 @@ namespace RestoreMonarchy.MoreHomes.Models
 
             if (plant == 65535)
             {
-                BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
+                /*BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {
                     x,
                     y,
                     plant,
                     index,
                     steamID
-                });
+                });*/
+                BarricadeManager.ReceiveBedClaimState(x, y, plant, index, steamID);
             }
             else
             {
-                BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
+                /*BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {
                     x,
                     y,
                     plant,
                     index,
                     steamID
-                });
+                });*/
+
+                BarricadeManager.ReceiveBedClaimState(x, y, plant, index, steamID);
             }
 
             BitConverter.GetBytes(InteractableBed.owner.m_SteamID).CopyTo(region.barricades[index].barricade.state, 0);
@@ -75,25 +78,27 @@ namespace RestoreMonarchy.MoreHomes.Models
 
             if (plant == 65535)
             {
-                BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
+                /*BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, x, y, BarricadeManager.BARRICADE_REGIONS, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {
                     x,
                     y,
                     plant,
                     index,
                     CSteamID.Nil
-                });
+                }); */
+                BarricadeManager.ReceiveBedClaimState(x, y, plant, index, CSteamID.Nil);
             }
             else
             {
-                BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
+                /*BarricadeManager.instance.channel.send("tellClaimBed", ESteamCall.ALL, ESteamPacket.UPDATE_RELIABLE_BUFFER, new object[]
                 {
                     x,
                     y,
                     plant,
                     index,
                     CSteamID.Nil
-                });
+                });*/
+                BarricadeManager.ReceiveBedClaimState(x, y, plant, index, CSteamID.Nil);
             }
             BitConverter.GetBytes(InteractableBed.owner.m_SteamID).CopyTo(region.barricades[index].barricade.state, 0);
         }
