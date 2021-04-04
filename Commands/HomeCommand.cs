@@ -6,8 +6,6 @@ using Rocket.Unturned.Chat;
 using Rocket.Core.Utils;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using RestoreMonarchy.Teleportation;
-using RestoreMonarchy.Teleportation.Utils;
 using System;
 using RestoreMonarchy.MoreHomes.Helpers;
 using UnityEngine;
@@ -91,7 +89,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         private bool ValitedateRaidAndCombat(UnturnedPlayer player)
         {
-            TeleportationPlugin teleportation = pluginInstance.TeleportationPlugin as TeleportationPlugin;
+            /*TeleportationPlugin teleportation = pluginInstance.TeleportationPlugin as TeleportationPlugin;
             if (teleportation.IsPlayerInCombat(player.CSteamID))
             {
                 UnturnedChat.Say(player, pluginInstance.Translate("WhileCombat"), pluginInstance.MessageColor);
@@ -102,7 +100,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
             {
                 UnturnedChat.Say(player, pluginInstance.Translate("WhileRaid"), pluginInstance.MessageColor);
                 return false;
-            }
+            }*/
             return true;
         }
         
