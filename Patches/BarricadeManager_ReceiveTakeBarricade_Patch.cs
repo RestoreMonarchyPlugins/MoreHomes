@@ -7,10 +7,10 @@ using Steamworks;
 namespace RestoreMonarchy.MoreHomes.Patches
 {
     [HarmonyPatch(typeof(BarricadeManager), "tellTakeBarricade")]
-    public static class BarricadeManager_TellTakeBarricade_Patch
+    public static class BarricadeManager_ReceiveTakeBarricade_Patch
     {
         [HarmonyPrefix]
-        public static void TellTakeBarricade_Prefix(byte x, byte y, ushort plant, ushort index)
+        public static void Prefix(byte x, byte y, ushort plant, ushort index)
         {
             if (BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion))
             {

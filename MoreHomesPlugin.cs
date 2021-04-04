@@ -8,6 +8,8 @@ using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
+using RestoreMonarchy.MoreHomes.Patches;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
@@ -35,7 +37,10 @@ namespace RestoreMonarchy.MoreHomes
             PlayerCooldowns = new Dictionary<string, DateTime>();
             
             HarmonyInstance = new Harmony(HarmonyInstanceId);
-            HarmonyInstance.PatchAll(Assembly);
+            HarmonyInstance.Patch(typeof(BarricadeManager).GetMethod("ReceiveClaimBedRequest", BindingFlags.Public | BindingFlags.Static),
+                new HarmonyMethod(typeof(BarricadeManager_ReceiveClaimBedRequest_Patch).GetMethod("Prefix", BindingFlags.Public | BindingFlags.Static)));
+            HarmonyInstance.Patch(typeof(BarricadeManager).GetMethod("ReceiveTakeBarricade", BindingFlags.Public | BindingFlags.Static),
+                new HarmonyMethod(typeof(BarricadeManager_ReceiveTakeBarricade_Patch).GetMethod("Prefix", BindingFlags.Public | BindingFlags.Static)));
 
             DataService = gameObject.AddComponent<DataService>();
 
@@ -90,7 +95,8 @@ namespace RestoreMonarchy.MoreHomes
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
             { "HomeClaimed", "Your new claimed home name is {0}" },
             { "HomeTeleportationFailed", "Failed to teleport you to {0} home" },
-            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" }
+            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" },
+            { "ReclaimTheBed", "Something's gone wrong. Please salvage the barricade and plant it back again." },
         };        
     }
 }
