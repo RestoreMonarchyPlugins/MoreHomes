@@ -8,16 +8,18 @@ using Rocket.Unturned.Chat;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
-	[HarmonyPatch(typeof(BarricadeManager), "askClaimBed")]
-    public static class BarricadeManager_AskClaimBed_Patch
+	[HarmonyPatch(typeof(BarricadeManager), "ReceiveClaimBedRequest")]
+    class BarricadeManager_AskClaimBed_Patch
     {
         [HarmonyPrefix]
-        public static bool AskClaimBed_Prefix(BarricadeManager __instance, CSteamID steamID, byte x, byte y, ushort plant, ushort index)
+        static bool ReceiveClaimBedRequest_Prefix(in ServerInvocationContext context, byte x, byte y, ushort plant, ushort index)
         {
 			BarricadeRegion barricadeRegion;
-			if (Provider.isServer && BarricadeManager.tryGetRegion(x, y, plant, out barricadeRegion))
+			if (BarricadeManager.tryGetRegion(x, y, plant, out barricadeRegion))
 			{
-				Player player = PlayerTool.getPlayer(steamID);
+				Player player = context.GetPlayer();
+				CSteamID steamID = player.channel.owner.playerID.steamID;
+
 				if (player == null)
 				{
 					return false;
@@ -26,15 +28,16 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				{
 					return false;
 				}
-				if (index >= barricadeRegion.drops.Count)
+				if ((int)index >= barricadeRegion.drops.Count)
 				{
 					return false;
 				}
-				if ((barricadeRegion.drops[index].model.transform.position - player.transform.position).sqrMagnitude > 400f)
+				if ((barricadeRegion.drops[(int)index].model.transform.position - player.transform.position).sqrMagnitude > 400f)
 				{
 					return false;
 				}
-				InteractableBed interactableBed = barricadeRegion.drops[index].interactable as InteractableBed;
+
+				InteractableBed interactableBed = barricadeRegion.drops[(int)index].interactable as InteractableBed;
 				if (interactableBed != null && interactableBed.isClaimable && interactableBed.checkClaim(player.channel.owner.playerID.steamID))
 				{
 					if (interactableBed.isClaimed)
@@ -48,25 +51,27 @@ namespace RestoreMonarchy.MoreHomes.Patches
 						var playerData = HomesHelper.GetOrCreatePlayer(steamID);
 						int maxHomes = VipHelper.GetPlayerMaxHomes(steamID.ToString());
 						if (maxHomes == 1 && playerData.Homes.Count == 1)
-                        {
+						{
 							foreach (var home in playerData.Homes.ToArray())
-                            {
+							{
 								HomesHelper.RemoveHome(steamID, home);
 								home.Unclaim();
-                            }
-                        } else if (maxHomes <= playerData.Homes.Count)
-                        {
+							}
+						}
+						else if (maxHomes <= playerData.Homes.Count)
+						{
 							UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("MaxHomesWarn"), MoreHomesPlugin.Instance.MessageColor);
 							return false;
 						}
 
 						var playerHome = new PlayerHome(playerData.GetUniqueHomeName(), interactableBed);
 						playerData.Homes.Add(playerHome);
-						playerHome.Claim(steamID);
+						playerHome.Claim(player);
 						UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("HomeClaimed", playerHome.Name), MoreHomesPlugin.Instance.MessageColor);
 					}
 				}
 			}
+
 			return false;
 		}
     }

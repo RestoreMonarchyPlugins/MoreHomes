@@ -6,29 +6,26 @@ using Steamworks;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
-    [HarmonyPatch(typeof(BarricadeManager), "tellTakeBarricade")]
-    public static class BarricadeManager_TellTakeBarricade_Patch
+    [HarmonyPatch(typeof(BarricadeManager), "destroyBarricade")]
+    class BarricadeManager_destroyBarricade_Patch
     {
         [HarmonyPrefix]
-        public static void TellTakeBarricade_Prefix(byte x, byte y, ushort plant, ushort index)
+        static void destroyBarricade_Prefix(BarricadeRegion region, byte x, byte y, ushort plant, ushort index)
         {
-            if (BarricadeManager.tryGetRegion(x, y, plant, out BarricadeRegion barricadeRegion))
+            InteractableBed interactableBed = region.drops[index].interactable as InteractableBed;
+            if (interactableBed != null)
             {
-                InteractableBed interactableBed = barricadeRegion.drops[index].interactable as InteractableBed;
-                if (interactableBed != null)
+                var home = HomesHelper.GetPlayerHome(interactableBed.owner, interactableBed);
+                if (home != null)
                 {
-                    var home = HomesHelper.GetPlayerHome(interactableBed.owner, interactableBed);
-                    if (home != null)
+                    HomesHelper.RemoveHome(interactableBed.owner, home);
+                    if (PlayerTool.getPlayer(interactableBed.owner) != null)
                     {
-                        HomesHelper.RemoveHome(interactableBed.owner, home);
-                        if (PlayerTool.getPlayer(interactableBed.owner) != null)
-                        {
-                            UnturnedChat.Say(interactableBed.owner, MoreHomesPlugin.Instance.Translate("HomeDestroyed", home.Name), 
-                                MoreHomesPlugin.Instance.MessageColor);
-                        }
-                    }                        
+                        UnturnedChat.Say(interactableBed.owner, MoreHomesPlugin.Instance.Translate("HomeDestroyed", home.Name),
+                            MoreHomesPlugin.Instance.MessageColor);
+                    }
                 }
-            }            
+            }
         }
     }
 }
