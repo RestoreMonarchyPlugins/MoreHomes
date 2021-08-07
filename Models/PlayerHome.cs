@@ -38,7 +38,7 @@ namespace RestoreMonarchy.MoreHomes.Models
             if (InteractableBed == null)
                 return;
 
-            if (!BarricadeManager.tryGetInfo(InteractableBed.transform, out byte x, out byte y, out ushort plant, out ushort index, out BarricadeRegion region))
+            if (!BarricadeManager.tryGetRegion(InteractableBed.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion region))
                 return;
 
             typeof(BarricadeManager).GetMethod("ServerSetBedOwnerInternal", BindingFlags.Static | BindingFlags.NonPublic)
@@ -47,7 +47,6 @@ namespace RestoreMonarchy.MoreHomes.Models
                     x, 
                     y, 
                     plant, 
-                    index, 
                     region, 
                     player.channel.owner.playerID.steamID
                 });
@@ -63,10 +62,14 @@ namespace RestoreMonarchy.MoreHomes.Models
 
         public void Destroy()
         {
-            if (!BarricadeManager.tryGetInfo(InteractableBed.transform, out var x, out var y, out var plant, out var index, out var region))
+            BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(InteractableBed.transform);
+            if (drop == null)
                 return;
-            
-            BarricadeManager.destroyBarricade(region, x, y, plant, index);
+
+            if (!BarricadeManager.tryGetRegion(InteractableBed.transform, out byte x, out byte y, out ushort plant, out _))
+                return;
+
+            BarricadeManager.destroyBarricade(drop, x, y, plant);
         }
     }
 }

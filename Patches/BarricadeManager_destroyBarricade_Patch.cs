@@ -6,13 +6,14 @@ using Steamworks;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
-    [HarmonyPatch(typeof(BarricadeManager), "destroyBarricade")]
+    [HarmonyPatch(typeof(BarricadeManager), "destroyBarricade", 
+        typeof(BarricadeDrop), typeof(byte), typeof(byte), typeof(ushort))]
     class BarricadeManager_destroyBarricade_Patch
     {
         [HarmonyPrefix]
-        static void destroyBarricade_Prefix(BarricadeRegion region, byte x, byte y, ushort plant, ushort index)
+        static void destroyBarricade_Prefix(BarricadeDrop barricade, byte x, byte y, ushort plant)
         {
-            InteractableBed interactableBed = region.drops[index].interactable as InteractableBed;
+            InteractableBed interactableBed = barricade.interactable as InteractableBed;
             if (interactableBed != null)
             {
                 var home = HomesHelper.GetPlayerHome(interactableBed.owner, interactableBed);
