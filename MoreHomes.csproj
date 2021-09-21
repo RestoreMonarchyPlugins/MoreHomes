@@ -84,6 +84,7 @@
     <Compile Include="Commands\RenameHomeCommand.cs" />
     <Compile Include="Commands\RestoreHomesCommand.cs" />
     <Compile Include="Helpers\HomesHelper.cs" />
+    <Compile Include="Helpers\ThreadHelper.cs" />
     <Compile Include="Helpers\VipHelper.cs" />
     <Compile Include="Models\ConvertablePosition.cs" />
     <Compile Include="Models\PlayerData.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Patches\BarricadeManager_destroyBarricade_Patch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DataService.cs" />
+    <Compile Include="Services\UIService.cs" />
     <Compile Include="Storage\DataStorage.cs" />
     <Compile Include="Models\VIPPermission.cs" />
   </ItemGroup>

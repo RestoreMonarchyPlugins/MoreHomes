@@ -21,6 +21,7 @@ namespace RestoreMonarchy.MoreHomes
         public Dictionary<string, DateTime> PlayerCooldowns { get; set; }
 
         public DataService DataService { get; private set; }
+        public UIService UIService { get; private set; }
 
         public Color MessageColor { get; set; }
 
@@ -38,6 +39,7 @@ namespace RestoreMonarchy.MoreHomes
             HarmonyInstance.PatchAll(Assembly);
 
             DataService = gameObject.AddComponent<DataService>();
+            UIService = gameObject.AddComponent<UIService>();
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
 
@@ -51,6 +53,7 @@ namespace RestoreMonarchy.MoreHomes
             HarmonyInstance = null;
 
             Destroy(DataService);
+            Destroy(UIService);
 
             R.Plugins.OnPluginsLoaded -= OnPluginsLoaded;
 
@@ -90,7 +93,8 @@ namespace RestoreMonarchy.MoreHomes
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
             { "HomeClaimed", "Your new claimed home name is {0}" },
             { "HomeTeleportationFailed", "Failed to teleport you to {0} home" },
-            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" }
+            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" },
+            { "HomeNotFound2", "Home not found" }
         };        
     }
 }

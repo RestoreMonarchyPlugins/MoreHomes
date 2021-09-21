@@ -15,6 +15,11 @@ namespace RestoreMonarchy.MoreHomes
         public List<VIPPermission> VIPDelays { get; set; }
         public List<VIPPermission> VIPMaxHomes { get; set; }
 
+        public ushort DeathUIEffectId { get; set; }
+        public string DefaultKillerImageUrl { get; set; }
+        public string OpenUICommand { get; set; }
+        public string CloseUICommand { get; set; }
+
         public void LoadDefaults()
         {
             MessageColor = "yellow";
@@ -38,6 +43,11 @@ namespace RestoreMonarchy.MoreHomes
                 new VIPPermission("morehomes.vip", 3),
                 new VIPPermission("morehomes.star", 4)
             };
+
+            DeathUIEffectId = 31319;
+            DefaultKillerImageUrl = "https://i.hizliresim.com/fcp3gx8.png";
+            OpenUICommand = "hiderust";
+            CloseUICommand = "hiderust";
         }
     }
 }
