@@ -68,7 +68,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
         private bool ValidateTeleportation(UnturnedPlayer player, PlayerHome home)
         {
-            if (home.InteractableBed == null || home.InteractableBed.owner != player.CSteamID)
+            if (home.InteractableBed == null || !home.InteractableBed.isActiveAndEnabled || home.InteractableBed.owner != player.CSteamID)
             {
                 HomesHelper.RemoveHome(player.CSteamID, home);
                 UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);                
