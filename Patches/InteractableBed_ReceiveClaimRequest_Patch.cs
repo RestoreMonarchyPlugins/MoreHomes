@@ -23,8 +23,7 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				return false;
 			}
 
-			Player player = context.GetPlayer();
-			CSteamID steamID = player.channel.owner.playerID.steamID;
+			Player player = context.GetPlayer();			
 
 			if (player == null)
 			{
@@ -39,12 +38,13 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				return false;
 			}
 
+			CSteamID steamID = player.channel.owner.playerID.steamID;
 
 			if (__instance != null && __instance.isClaimable && __instance.checkClaim(player.channel.owner.playerID.steamID))
 			{
 				if (__instance.isClaimed)
 				{
-					var home = HomesHelper.GetPlayerHome(steamID, __instance);
+                    PlayerHome home = HomesHelper.GetPlayerHome(steamID, __instance);
 					HomesHelper.RemoveHome(steamID, home);
 					home.Unclaim();
 				}
@@ -54,7 +54,7 @@ namespace RestoreMonarchy.MoreHomes.Patches
 					int maxHomes = VipHelper.GetPlayerMaxHomes(steamID.ToString());
 					if (maxHomes == 1 && playerData.Homes.Count == 1)
 					{
-						foreach (var home in playerData.Homes.ToArray())
+						foreach (PlayerHome home in playerData.Homes.ToArray())
 						{
 							HomesHelper.RemoveHome(steamID, home);
 							home.Unclaim();
@@ -66,7 +66,7 @@ namespace RestoreMonarchy.MoreHomes.Patches
 						return false;
 					}
 
-					var playerHome = new PlayerHome(playerData.GetUniqueHomeName(), __instance);
+                    PlayerHome playerHome = new PlayerHome(playerData.GetUniqueHomeName(), __instance);
 					playerData.Homes.Add(playerHome);
 					playerHome.Claim(player);
 					UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("HomeClaimed", playerHome.Name), MoreHomesPlugin.Instance.MessageColor);
