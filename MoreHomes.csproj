@@ -83,6 +83,7 @@
     <Compile Include="Commands\DestroyHomeCommand.cs" />
     <Compile Include="Commands\RenameHomeCommand.cs" />
     <Compile Include="Commands\RestoreHomesCommand.cs" />
+    <Compile Include="Components\MovementDetectorComponent.cs" />
     <Compile Include="Helpers\HomesHelper.cs" />
     <Compile Include="Helpers\VipHelper.cs" />
     <Compile Include="Models\ConvertablePosition.cs" />

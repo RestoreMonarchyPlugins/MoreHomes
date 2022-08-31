@@ -11,6 +11,8 @@ namespace RestoreMonarchy.MoreHomes
         public int DefaultHomeDelay { get; set; }
         public int DefaultMaxHomes { get; set; }
         public float TeleportHeight { get; set; }
+        public bool CancelOnMove { get; set; }
+        public float MoveMaxDistance { get; set; }
         public List<VIPPermission> VIPCooldowns { get; set; }
         public List<VIPPermission> VIPDelays { get; set; }
         public List<VIPPermission> VIPMaxHomes { get; set; }
@@ -22,6 +24,8 @@ namespace RestoreMonarchy.MoreHomes
             DefaultHomeDelay = 10;
             DefaultMaxHomes = 2;
             TeleportHeight = 0.5f;
+            CancelOnMove = true;
+            MoveMaxDistance = 0.5f;
 
             VIPCooldowns = new List<VIPPermission>()
             {

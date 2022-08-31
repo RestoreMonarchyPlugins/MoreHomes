@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using RestoreMonarchy.MoreHomes.Components;
 using RestoreMonarchy.MoreHomes.Services;
 using Rocket.API;
 using Rocket.API.Collections;
@@ -22,6 +23,8 @@ namespace RestoreMonarchy.MoreHomes
 
         public DataService DataService { get; private set; }
 
+        public MovementDetectorComponent MovementDetector { get; set; }
+
         public Color MessageColor { get; set; }
 
         public const string HarmonyInstanceId = "com.restoremonarchy.morehomes";
@@ -38,6 +41,8 @@ namespace RestoreMonarchy.MoreHomes
             HarmonyInstance.PatchAll(Assembly);
 
             DataService = gameObject.AddComponent<DataService>();
+
+            MovementDetector = gameObject.AddComponent<MovementDetectorComponent>();
 
             R.Plugins.OnPluginsLoaded += OnPluginsLoaded;
 
@@ -68,7 +73,7 @@ namespace RestoreMonarchy.MoreHomes
 
         public override TranslationList DefaultTranslations => new TranslationList(){
 
-            { "HomeCooldown", "You have to wait {0} to use this command again" },
+            { "HomeCooldown", "You have to wait {0} seconds to use home again" },
             { "HomeDelayWarn", "You will be teleported to your home in {0} seconds" },
             { "MaxHomesWarn", "You cannot have more homes" },
             { "BedDestroyed", "Your home got destroyed or unclaimed! Teleportation canceled" },
@@ -90,7 +95,8 @@ namespace RestoreMonarchy.MoreHomes
             { "RenameHomeSuccess", "Successfully renamed home {0} to {1}!" },
             { "HomeClaimed", "Your new claimed home name is {0}" },
             { "HomeTeleportationFailed", "Failed to teleport you to {0} home" },
-            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" }
+            { "HomeDestroyed", "Your home {0} got destroyed or you salvaged it!" },
+            { "HomeCanceledYouMoved", "Your home teleportation was canceled because you moved" }
         };        
     }
 }

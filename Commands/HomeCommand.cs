@@ -11,6 +11,7 @@ using RestoreMonarchy.Teleportation.Utils;
 using System;
 using RestoreMonarchy.MoreHomes.Helpers;
 using UnityEngine;
+using System.Threading;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -48,8 +49,29 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 UnturnedChat.Say(caller, pluginInstance.Translate("HomeDelayWarn", delay), pluginInstance.MessageColor);
             }
 
+            bool shouldCancel = false;
+
+            if (pluginInstance.Configuration.Instance.CancelOnMove)
+            {
+                pluginInstance.MovementDetector.AddPlayer(player.Player, () =>
+                {
+                    shouldCancel = true;
+                    UnturnedChat.Say(player, pluginInstance.Translate("HomeCanceledYouMoved"), pluginInstance.MessageColor);
+                });
+            }            
+
             TaskDispatcher.QueueOnMainThread(() =>
             {
+                if (delay > 0 && pluginInstance.Configuration.Instance.CancelOnMove)
+                {
+                    if (shouldCancel)
+                    {
+                        return;
+                    }
+                }
+
+                pluginInstance.MovementDetector.RemovePlayer(player.Player);
+
                 if (!ValidateTeleportation(player, home))
                 {
                     pluginInstance.PlayerCooldowns.Remove(caller.Id);
