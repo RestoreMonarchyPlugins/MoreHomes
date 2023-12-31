@@ -1,10 +1,33 @@
 [![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/MoreHomes/releases) ![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)
 # MoreHomes
-*   Allows players to have multiple beds
-*   You can set the delay of teleportation
-*   Manage max amount of homes by creating permissions
-*   Restore all beds to the database with a command
-*   Checks if bed exists before teleporting
+* Allows players to have multiple beds
+* You can set the delay of teleportation
+* Manage max amount of homes by creating permissions
+* Restore all beds to the database with a command
+* Checks if bed exists before teleporting
+
+## Commands
+
+**/home** *<Name>* – Teleports player to their bed
+``` 
+<Permission Cooldown="0">home</Permission>
+```
+**/homes** – Displays a list of player's claimed beds
+``` 
+<Permission Cooldown="0">homes</Permission>
+```
+**/destroyhome** *<Name>* – Destroys the bed and removes it from you home list
+```
+<Permission Cooldown="0">destroyhome</Permission>
+```
+**/renamehome** *<Name>* *<NewName>* – Changes home's name to a new one
+``` 
+<Permission Cooldown="0">renamehome</Permission>
+```
+**/restorehomes** - Restores all beds that are claimed and not in database
+``` 
+<Permission Cooldown="0">restorehomes</Permission>
+```
 
 ## Configuration
 ```xml
