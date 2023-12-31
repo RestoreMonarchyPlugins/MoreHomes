@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>RestoreMonarchy.MoreHomes</RootNamespace>
+		<Version>1.8.1</Version>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Assembly-CSharp">
+	    <HintPath>..\lib\Assembly-CSharp.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="com.rlabrecque.steamworks.net">
+	    <HintPath>..\lib\com.rlabrecque.steamworks.net.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Newtonsoft.Json">
+	    <HintPath>..\lib\Newtonsoft.Json.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Rocket.API">
+	    <HintPath>..\lib\Rocket.API.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Rocket.Core">
+	    <HintPath>..\lib\Rocket.Core.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Rocket.Unturned">
+	    <HintPath>..\lib\Rocket.Unturned.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="SDG.NetTransport">
+	    <HintPath>..\lib\SDG.NetTransport.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Teleportation">
+	    <HintPath>..\lib\Teleportation.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine">
+	    <HintPath>..\lib\UnityEngine.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>..\lib\UnityEngine.CoreModule.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	</ItemGroup>
+
+</Project>
