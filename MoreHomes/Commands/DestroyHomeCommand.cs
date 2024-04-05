@@ -17,7 +17,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
             UnturnedPlayer player = (UnturnedPlayer)caller;
             string homeName = command.ElementAtOrDefault(0);
             
-            if (homeName == null)
+            if (string.IsNullOrEmpty(homeName))
             {
                 UnturnedChat.Say(caller, pluginInstance.Translate("DestroyHomeFormat"), pluginInstance.MessageColor);
                 return;

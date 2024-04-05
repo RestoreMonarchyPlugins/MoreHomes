@@ -6,7 +6,6 @@ using Rocket.API.Collections;
 using Rocket.Core;
 using Rocket.Core.Plugins;
 using Rocket.Unturned.Chat;
-using SDG.Unturned;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

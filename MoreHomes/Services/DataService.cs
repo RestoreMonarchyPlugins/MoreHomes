@@ -1,7 +1,9 @@
 ﻿using RestoreMonarchy.MoreHomes.Models;
 using RestoreMonarchy.MoreHomes.Storage;
 using SDG.Unturned;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
@@ -16,30 +18,72 @@ namespace RestoreMonarchy.MoreHomes.Services
 
         void Awake()
         {
-            PlayersDataStorage = new DataStorage<List<PlayerData>>(pluginInstance.Directory, "MoreHomesData.json");
+            string unturnedDirectory = UnturnedPaths.RootDirectory.FullName;
+            string mapLevelPath = Path.Combine(ServerSavedata.directory, Provider.serverID, "Level", Provider.map);
+
+            string directory = unturnedDirectory + mapLevelPath;
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+
+            string filePath = Path.Combine(directory, "MoreHomesData.json");
+            if (!File.Exists(filePath))
+            {
+                string oldFilePath = Path.Combine(pluginInstance.Directory, "MoreHomesData.json");
+                if (File.Exists(oldFilePath))
+                {
+                    File.Move(oldFilePath, filePath);
+                    string migrationFilePath = Path.Combine(pluginInstance.Directory, "Migration.txt");
+
+                    string[] lines =
+                    [
+                        "Old data file has been moved to the map level location!",
+                        $"Old file path: {oldFilePath}",
+                        $"New file path: {filePath}",
+                        $"Timestamp: {DateTime.Now}"
+                    ];
+
+                    using StreamWriter writer = File.CreateText(migrationFilePath);
+                    foreach (string line in lines)
+                    {
+                        writer.WriteLine(line);
+                        Logger.Log("[Migration] " + line, ConsoleColor.Yellow);
+                    }
+                }
+            }
+
+            PlayersDataStorage = new DataStorage<List<PlayerData>>(directory, "MoreHomesData.json");
             SaveManager.onPostSave += SaveData;
         }
 
         void Start()
         {
             if (Level.isLoaded)
+            {
                 ReloadData();
+            }                
             else
-                Level.onLevelLoaded += (i) => ReloadData();
+            {
+                Level.onLevelLoaded += ReloadData;
+            }                
         }
 
         void OnDestroy()
         {
-            Level.onLevelLoaded -= (i) => ReloadData();
+            Level.onLevelLoaded -= ReloadData;
             SaveManager.onPostSave -= SaveData;
             SaveData();
         }
 
-        public void ReloadData()
+        public void ReloadData(int i = 0)
         {
             PlayersData = PlayersDataStorage.Read();
             if (PlayersData == null)
+            {
                 PlayersData = new List<PlayerData>();
+            }                
 
             var interactableBeds = new List<InteractableBed>();
 
