@@ -1,40 +1,38 @@
-[![Version](https://img.shields.io/github/release/RestoreMonarchyPlugins/MoreHomes.svg)](https://github.com/RestoreMonarchyPlugins/MoreHomes/releases) ![Discord](https://discordapp.com/api/guilds/520355060312440853/widget.png)
 # MoreHomes
-* Allows players to have multiple beds
-* You can set the delay of teleportation
-* Manage max amount of homes by creating permissions
-* Restore all beds to the database with a command
-* Checks if bed exists before teleporting
+Allow players to claim and teleport to multiple beds. 
+
+## Features
+* Allow players to claim multiple beds
+* Cooldown and delay system for home teleportation
+* Cancel teleportation if the player moves
+* Integrates with Telepoertation plugin for Combat and Raid mode checks
+* VIP permission system for cooldown, delay, and max homes
+* As of version **v1.9.0,** `MoreHomesData.json` is stored in the map level data folder instead of the plugin directory
 
 ## Commands
+### Player
+* **/home** – Teleport to the first home in the list
+* **/home \<name\>** – Teleport to the home with the given name
+* **/homes** – Lists all your homes
+* **/destroyhome \<name\>** – Removes the home with the given name
+* **/renamehome \<name\> \<new_name\>** – Renames the home with the given name
+### Admin/Console
+* **/restorehomes** - Collects all the homes from the map and restores them to `MoreHomesData.json`
 
-**/home** *<Name>* – Teleports player to their bed
-``` 
+## Player Permissions
+```xml
 <Permission Cooldown="0">home</Permission>
-```
-**/homes** – Displays a list of player's claimed beds
-``` 
 <Permission Cooldown="0">homes</Permission>
-```
-**/destroyhome** *<Name>* – Destroys the bed and removes it from you home list
-```
 <Permission Cooldown="0">destroyhome</Permission>
-```
-**/renamehome** *<Name>* *<NewName>* – Changes home's name to a new one
-``` 
 <Permission Cooldown="0">renamehome</Permission>
-```
-**/restorehomes** - Restores all beds that are claimed and not in database
-``` 
-<Permission Cooldown="0">restorehomes</Permission>
 ```
 
 ## Configuration
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <MoreHomesConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <MessageColor>#f79122</MessageColor>
-  <DefaultHomeCooldown>20</DefaultHomeCooldown>
+  <MessageColor>yellow</MessageColor>
+  <DefaultHomeCooldown>60</DefaultHomeCooldown>
   <DefaultHomeDelay>10</DefaultHomeDelay>
   <DefaultMaxHomes>2</DefaultMaxHomes>
   <TeleportHeight>0.5</TeleportHeight>
@@ -42,7 +40,7 @@
   <MoveMaxDistance>0.5</MoveMaxDistance>
   <VIPCooldowns>
     <VIPPermission PermissionTag="morehomes.vip" Value="10" />
-    <VIPPermission PermissionTag="morehomes.star" Value="5" />
+    <VIPPermission PermissionTag="morehomes.star" Value="10" />
   </VIPCooldowns>
   <VIPDelays>
     <VIPPermission PermissionTag="morehomes.vip" Value="5" />
@@ -57,9 +55,9 @@
 
 ## Translations
 ```xml
- <?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Translations xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Translation Id="HomeCooldown" Value="You have to wait {0} to use this command again" />
+  <Translation Id="HomeCooldown" Value="You have to wait {0} seconds to use home again" />
   <Translation Id="HomeDelayWarn" Value="You will be teleported to your home in {0} seconds" />
   <Translation Id="MaxHomesWarn" Value="You cannot have more homes" />
   <Translation Id="BedDestroyed" Value="Your home got destroyed or unclaimed! Teleportation canceled" />
@@ -82,5 +80,6 @@
   <Translation Id="HomeClaimed" Value="Your new claimed home name is {0}" />
   <Translation Id="HomeTeleportationFailed" Value="Failed to teleport you to {0} home" />
   <Translation Id="HomeDestroyed" Value="Your home {0} got destroyed or you salvaged it!" />
+  <Translation Id="HomeCanceledYouMoved" Value="Your home teleportation was canceled because you moved" />
 </Translations>
 ```
