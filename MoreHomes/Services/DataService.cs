@@ -92,7 +92,9 @@ namespace RestoreMonarchy.MoreHomes.Services
                 foreach (var drop in region.drops)
                 {
                     if (drop.interactable as InteractableBed != null)
+                    {
                         interactableBeds.Add(drop.interactable as InteractableBed);
+                    }                        
                 }
             }
 
@@ -102,7 +104,8 @@ namespace RestoreMonarchy.MoreHomes.Services
                 {
                     foreach (var interactableBed in interactableBeds)
                     {
-                        if (interactableBed.transform.position.x == home.Position.X && interactableBed.transform.position.y == home.Position.Y 
+                        if (interactableBed.transform.position.x == home.Position.X 
+                            && interactableBed.transform.position.y == home.Position.Y 
                             && interactableBed.transform.position.z == home.Position.Z)
                         {
                             home.InteractableBed = interactableBed;
@@ -120,13 +123,14 @@ namespace RestoreMonarchy.MoreHomes.Services
             {
                 foreach (var home in player.Homes)
                 {
-                    if (home == null || home.InteractableBed == null)
+                    if (home == null || home.InteractableBed == null) 
+                    {
                         continue;
+                    }
                     home.Position = new ConvertablePosition(home.LivePosition);
                 }
             }
             PlayersDataStorage.Save(PlayersData);
-            Logger.Log($"{PlayersData.Count} player homes data has been saved!");
         }
     }
 }

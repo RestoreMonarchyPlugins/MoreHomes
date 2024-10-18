@@ -21,15 +21,15 @@ namespace RestoreMonarchy.MoreHomes.Commands
                     InteractableBed interactableBed = drop.interactable as InteractableBed;
                     if (interactableBed != null && interactableBed.isClaimed)
                     {
-                        var player = HomesHelper.GetOrCreatePlayer(interactableBed.owner);
-                        var playerHome = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
+                        PlayerData player = HomesHelper.GetOrCreatePlayer(interactableBed.owner);
+                        PlayerHome playerHome = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
                         player.Homes.Add(playerHome);
                         num++;
                     }
                 }
             }
             pluginInstance.DataService.SaveData();
-            UnturnedChat.Say(caller, pluginInstance.Translate("RestoreHomesSuccess", num), pluginInstance.MessageColor);
+            pluginInstance.SendMessageToPlayer(caller, "RestoreHomesSuccess", num.ToString("N0"));
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Console;

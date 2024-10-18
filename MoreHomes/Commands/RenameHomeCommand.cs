@@ -1,5 +1,4 @@
 ﻿using Rocket.API;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using System.Collections.Generic;
 using RestoreMonarchy.MoreHomes.Helpers;
@@ -15,25 +14,25 @@ namespace RestoreMonarchy.MoreHomes.Commands
             UnturnedPlayer player = (UnturnedPlayer)caller;
             if (command.Length < 2)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("RenameHomeFormat"));
+                pluginInstance.SendMessageToPlayer(caller, "RenameHomeFormat");
                 return;
             }
 
             var home = HomesHelper.GetPlayerHome(player.CSteamID, command[0]);
             if (home == null)
             {
-                UnturnedChat.Say(player, pluginInstance.Translate("HomeNotFound", command[0]), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(player, "HomeNotFound", command[0]);
                 return;
             }
 
             if (HomesHelper.GetPlayerHome(player.CSteamID, command[1]) != null)
             {
-                UnturnedChat.Say(player, pluginInstance.Translate("RenameHomeFail", command[1]), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(player, "RenameHomeFail", command[1]);
                 return;
             }
 
             home.Name = command[1];
-            UnturnedChat.Say(player, pluginInstance.Translate("RenameHomeSuccess", command[0], command[1]), pluginInstance.MessageColor);
+            pluginInstance.SendMessageToPlayer(player, "RenameHomeSuccess", command[0], command[1]);
         }
 
         public AllowedCaller AllowedCaller => AllowedCaller.Player;

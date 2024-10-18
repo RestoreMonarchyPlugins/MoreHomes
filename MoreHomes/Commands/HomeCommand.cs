@@ -2,7 +2,6 @@
 using Rocket.API;
 using System.Collections.Generic;
 using System.Linq;
-using Rocket.Unturned.Chat;
 using Rocket.Core.Utils;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
@@ -11,7 +10,6 @@ using RestoreMonarchy.Teleportation.Utils;
 using System;
 using RestoreMonarchy.MoreHomes.Helpers;
 using UnityEngine;
-using System.Threading;
 
 namespace RestoreMonarchy.MoreHomes.Commands
 {
@@ -26,17 +24,18 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (home == null)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("NoHome"), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(caller, "NoHome");
                 return;
             }
 
             if (!ValidateTeleportation(player, home))
+            {
                 return;
+            }                
 
             if (pluginInstance.PlayerCooldowns.TryGetValue(caller.Id, out DateTime cooldownExpire) && cooldownExpire > DateTime.Now)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeCooldown", System.Math.Round((cooldownExpire - DateTime.Now).TotalSeconds)), 
-                    pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(caller, "HomeCooldown", Math.Round((cooldownExpire - DateTime.Now).TotalSeconds));
                 return;
             }
 
@@ -46,7 +45,7 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
             if (delay > 0)
             {
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeDelayWarn", delay), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(caller, "HomeDelayWarn", delay);
             }
 
             bool shouldCancel = false;
@@ -56,9 +55,9 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 pluginInstance.MovementDetector.AddPlayer(player.Player, () =>
                 {
                     shouldCancel = true;
-                    UnturnedChat.Say(player, pluginInstance.Translate("HomeCanceledYouMoved"), pluginInstance.MessageColor);
+                    pluginInstance.SendMessageToPlayer(player, "HomeCanceledYouMoved");
                 });
-            }            
+            }
 
             TaskDispatcher.QueueOnMainThread(() =>
             {
@@ -80,11 +79,11 @@ namespace RestoreMonarchy.MoreHomes.Commands
 
                 if (!player.Player.teleportToLocation(home.LivePosition + new Vector3(0f, pluginInstance.Configuration.Instance.TeleportHeight, 0f), player.Rotation))
                 {
-                    UnturnedChat.Say(caller, pluginInstance.Translate("HomeTeleportationFailed", home.Name), pluginInstance.MessageColor);
+                    pluginInstance.SendMessageToPlayer(caller, "HomeTeleportationFailed", home.Name);
                     pluginInstance.PlayerCooldowns.Remove(caller.Id);
                     return;
                 }
-                UnturnedChat.Say(caller, pluginInstance.Translate("HomeSuccess", home.Name), pluginInstance.MessageColor);                
+                pluginInstance.SendMessageToPlayer(caller, "HomeSuccess", home.Name);
             }, delay);
         }
 
@@ -93,13 +92,13 @@ namespace RestoreMonarchy.MoreHomes.Commands
             if (home.InteractableBed == null || !home.InteractableBed.isActiveAndEnabled || home.InteractableBed.owner != player.CSteamID)
             {
                 HomesHelper.RemoveHome(player.CSteamID, home);
-                UnturnedChat.Say(player, pluginInstance.Translate("BedDestroyed"), pluginInstance.MessageColor);                
+                pluginInstance.SendMessageToPlayer(player, "BedDestroyed");
                 return false;
             }
 
             if (player.Stance == EPlayerStance.DRIVING)
             {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileDriving"), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(player, "WhileDriving");
                 return false;
             }
 
@@ -116,18 +115,18 @@ namespace RestoreMonarchy.MoreHomes.Commands
             TeleportationPlugin teleportation = pluginInstance.TeleportationPlugin as TeleportationPlugin;
             if (teleportation.IsPlayerInCombat(player.CSteamID))
             {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileCombat"), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(player, "WhileCombat");
                 return false;
             }
 
             if (teleportation.IsPlayerInRaid(player.CSteamID))
             {
-                UnturnedChat.Say(player, pluginInstance.Translate("WhileRaid"), pluginInstance.MessageColor);
+                pluginInstance.SendMessageToPlayer(player, "WhileRaid");
                 return false;
             }
             return true;
         }
-        
+
         public AllowedCaller AllowedCaller => AllowedCaller.Player;
 
         public string Name => "home";

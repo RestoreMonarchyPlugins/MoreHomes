@@ -6,7 +6,8 @@ namespace RestoreMonarchy.MoreHomes
 {
     public class MoreHomesConfiguration : IRocketPluginConfiguration
     {
-        public string MessageColor { get; set; }        
+        public string MessageColor { get; set; }
+        public string MessageIconUrl { get; set; } = "https://i.imgur.com/9TF5aB1.png";
         public int DefaultHomeCooldown { get; set; }
         public int DefaultHomeDelay { get; set; }
         public int DefaultMaxHomes { get; set; }
@@ -20,6 +21,7 @@ namespace RestoreMonarchy.MoreHomes
         public void LoadDefaults()
         {
             MessageColor = "yellow";
+            MessageIconUrl = "https://i.imgur.com/9TF5aB1.png";
             DefaultHomeCooldown = 20;
             DefaultHomeDelay = 10;
             DefaultMaxHomes = 2;

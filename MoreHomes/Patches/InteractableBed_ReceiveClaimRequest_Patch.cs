@@ -5,6 +5,7 @@ using System;
 using RestoreMonarchy.MoreHomes.Helpers;
 using RestoreMonarchy.MoreHomes.Models;
 using Rocket.Unturned.Chat;
+using Rocket.Unturned.Player;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
@@ -50,7 +51,8 @@ namespace RestoreMonarchy.MoreHomes.Patches
 				}
 				else
 				{
-					var playerData = HomesHelper.GetOrCreatePlayer(steamID);
+					UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+                    PlayerData playerData = HomesHelper.GetOrCreatePlayer(steamID);
 					int maxHomes = VipHelper.GetPlayerMaxHomes(steamID.ToString());
 					if (maxHomes == 1 && playerData.Homes.Count == 1)
 					{
@@ -62,14 +64,14 @@ namespace RestoreMonarchy.MoreHomes.Patches
 					}
 					else if (maxHomes <= playerData.Homes.Count)
 					{
-						UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("MaxHomesWarn"), MoreHomesPlugin.Instance.MessageColor);
+                        MoreHomesPlugin.Instance.SendMessageToPlayer(unturnedPlayer, "MaxHomesWarn");
 						return false;
 					}
 
-                    PlayerHome playerHome = new PlayerHome(playerData.GetUniqueHomeName(), __instance);
+                    PlayerHome playerHome = new(playerData.GetUniqueHomeName(), __instance);
 					playerData.Homes.Add(playerHome);
 					playerHome.Claim(player);
-					UnturnedChat.Say(steamID, MoreHomesPlugin.Instance.Translate("HomeClaimed", playerHome.Name), MoreHomesPlugin.Instance.MessageColor);
+                    MoreHomesPlugin.Instance.SendMessageToPlayer(unturnedPlayer, "HomeClaimed", playerHome.Name);
 				}
 			}
 

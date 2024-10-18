@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using RestoreMonarchy.MoreHomes.Helpers;
 using Rocket.Unturned.Chat;
+using Rocket.Unturned.Player;
 using SDG.Unturned;
 using Steamworks;
 using UnityEngine;
@@ -36,10 +37,11 @@ namespace RestoreMonarchy.MoreHomes.Patches
                 if (home != null)
                 {
                     HomesHelper.RemoveHome(interactableBed.owner, home);
-                    if (PlayerTool.getPlayer(interactableBed.owner) != null)
+                    Player player = PlayerTool.getPlayer(interactableBed.owner);
+                    if (player != null)
                     {
-                        UnturnedChat.Say(interactableBed.owner, MoreHomesPlugin.Instance.Translate("HomeDestroyed", home.Name),
-                            MoreHomesPlugin.Instance.MessageColor);
+                        UnturnedPlayer unturnedPlayer = UnturnedPlayer.FromPlayer(player);
+                        MoreHomesPlugin.Instance.SendMessageToPlayer(unturnedPlayer, "HomeDestroyed", home.Name);
                     }
                 }
             }
