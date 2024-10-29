@@ -1,12 +1,9 @@
 ﻿using RestoreMonarchy.MoreHomes.Models;
-using Rocket.Unturned.Chat;
 using SDG.Unturned;
 using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Helpers
@@ -18,30 +15,45 @@ namespace RestoreMonarchy.MoreHomes.Helpers
 
         public static PlayerData GetOrCreatePlayer(CSteamID steamID)
         {
-            var player = playersData.FirstOrDefault(x => x.PlayerId == steamID.m_SteamID);
+            PlayerData player = playersData.FirstOrDefault(x => x.PlayerId == steamID.m_SteamID);
             if (player == null)
             {
                 player = new PlayerData(steamID.m_SteamID);
                 playersData.Add(player);
             }
+
             return player;
         }
 
         public static PlayerHome GetPlayerHome(CSteamID steamID, string name = null)
         {
-            var player = GetOrCreatePlayer(steamID);
+            PlayerData player = GetOrCreatePlayer(steamID);
+
             return player.Homes.FirstOrDefault(x => name == null || x.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static PlayerHome GetPlayerHome(CSteamID steamID, InteractableBed interactableBed)
         {
-            var player = GetOrCreatePlayer(steamID);
+            PlayerData player = GetOrCreatePlayer(steamID);
+
             return player.Homes.FirstOrDefault(x => x.InteractableBed == interactableBed);
-        } 
+        }
+
+        public static PlayerHome GetPlayerHome(CSteamID steamID, Vector3 position)
+        {
+            PlayerData player = GetOrCreatePlayer(steamID);
+
+            return player.Homes.FirstOrDefault(x =>
+                Math.Abs(x.Position.X - position.x) <= 1 &&
+                Math.Abs(x.Position.Y - position.y) <= 1 &&
+                Math.Abs(x.Position.Z - position.z) <= 1
+            );
+        }
 
         public static bool RemoveHome(CSteamID steamID, PlayerHome playerHome)
         {
-            var player = GetOrCreatePlayer(steamID);
+            PlayerData player = GetOrCreatePlayer(steamID);
+
             return player.Homes.Remove(playerHome);
         }
 

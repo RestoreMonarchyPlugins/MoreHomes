@@ -1,9 +1,12 @@
-﻿using RestoreMonarchy.MoreHomes.Models;
+﻿using RestoreMonarchy.MoreHomes.Helpers;
+using RestoreMonarchy.MoreHomes.Models;
 using RestoreMonarchy.MoreHomes.Storage;
 using SDG.Unturned;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using Logger = Rocket.Core.Logging.Logger;
 
@@ -83,36 +86,64 @@ namespace RestoreMonarchy.MoreHomes.Services
             if (PlayersData == null)
             {
                 PlayersData = new List<PlayerData>();
-            }                
+            }
 
-            var interactableBeds = new List<InteractableBed>();
+            List<InteractableBed> interactableBeds = [];
 
-            foreach (var region in BarricadeManager.regions)
+            foreach (BarricadeRegion region in BarricadeManager.regions)
             {
-                foreach (var drop in region.drops)
+                foreach (BarricadeDrop drop in region.drops)
                 {
-                    if (drop.interactable as InteractableBed != null)
+                    if (drop.interactable is InteractableBed interactableBed)
                     {
-                        interactableBeds.Add(drop.interactable as InteractableBed);
+                        interactableBeds.Add(interactableBed);
                     }                        
                 }
             }
 
-            foreach (var player in PlayersData)
+            foreach (VehicleBarricadeRegion region in BarricadeManager.vehicleRegions)
             {
-                foreach (var home in player.Homes)
+                foreach (BarricadeDrop drop in region.drops)
                 {
-                    foreach (var interactableBed in interactableBeds)
+                    if (drop.interactable is InteractableBed interactableBed)
                     {
-                        if (interactableBed.transform.position.x == home.Position.X 
-                            && interactableBed.transform.position.y == home.Position.Y 
-                            && interactableBed.transform.position.z == home.Position.Z)
-                        {
-                            home.InteractableBed = interactableBed;
-                            interactableBeds.Remove(interactableBed);
-                            break;
-                        }
+                        interactableBeds.Add(interactableBed);
                     }
+                }
+            }
+
+            foreach (InteractableBed interactableBed in interactableBeds)
+            {
+                if (interactableBed.owner == CSteamID.Nil)
+                {
+                    continue;
+                }                    
+
+                PlayerHome home = HomesHelper.GetPlayerHome(interactableBed.owner, interactableBed.transform.position);
+                if (home != null)
+                {
+                    home.InteractableBed = interactableBed;
+                } else
+                {
+                    PlayerData player = HomesHelper.GetOrCreatePlayer(interactableBed.owner);
+                    home = new PlayerHome(player.GetUniqueHomeName(), interactableBed);
+                    player.Homes.Add(home);
+                }
+            }
+
+            foreach (PlayerData player in PlayersData.ToList())
+            {
+                foreach (PlayerHome home in player.Homes.ToList())
+                {
+                    if (home.InteractableBed == null)
+                    {
+                        player.Homes.Remove(home);
+                    }
+                }
+
+                if (player.Homes.Count == 0)
+                {
+                    PlayersData.Remove(player);
                 }
             }
         }
