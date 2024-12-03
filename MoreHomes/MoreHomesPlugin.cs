@@ -113,7 +113,8 @@ namespace RestoreMonarchy.MoreHomes
             { "HomeClaimed", "New home claimed with the name [[b]]{0}[[/b]]" },
             { "HomeTeleportationFailed", "Failed to teleport to [[b]]{0}[[/b]] home" },
             { "HomeDestroyed", "Your [[b]]{0}[[/b]] home was destroyed" },
-            { "HomeCanceledYouMoved", "Home teleportation canceled because you moved" }
+            { "HomeCanceledYouMoved", "Home teleportation canceled because you moved" },
+            { "CantTeleportToBedUnderground", "You can't teleport to [[b]]{0}[[/b]] home, because it's underground." }
         };
 
         internal void SendMessageToPlayer(IRocketPlayer player, string translationKey, params object[] placeholder)

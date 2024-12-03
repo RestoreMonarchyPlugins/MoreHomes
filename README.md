@@ -39,6 +39,7 @@ Allow players to claim and teleport to multiple beds.
   <TeleportHeight>0.5</TeleportHeight>
   <CancelOnMove>true</CancelOnMove>
   <MoveMaxDistance>0.5</MoveMaxDistance>
+  <BlockUnderground>false</BlockUnderground>
   <VIPCooldowns>
     <VIPPermission PermissionTag="morehomes.vip" Value="10" />
     <VIPPermission PermissionTag="morehomes.star" Value="5" />
@@ -81,5 +82,6 @@ Allow players to claim and teleport to multiple beds.
   <Translation Id="HomeTeleportationFailed" Value="Failed to teleport to [[b]]{0}[[/b]] home" />
   <Translation Id="HomeDestroyed" Value="Your [[b]]{0}[[/b]] home was destroyed" />
   <Translation Id="HomeCanceledYouMoved" Value="Home teleportation canceled because you moved" />
+  <Translation Id="CantTeleportToBedUnderground" Value="You can't teleport to [[b]]{0}[[/b]] home, because it's underground." />
 </Translations>
 ```

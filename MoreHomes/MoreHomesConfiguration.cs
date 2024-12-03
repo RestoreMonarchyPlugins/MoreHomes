@@ -14,6 +14,7 @@ namespace RestoreMonarchy.MoreHomes
         public float TeleportHeight { get; set; }
         public bool CancelOnMove { get; set; }
         public float MoveMaxDistance { get; set; }
+        public bool BlockUnderground { get; set; } = false;
         public List<VIPPermission> VIPCooldowns { get; set; }
         public List<VIPPermission> VIPDelays { get; set; }
         public List<VIPPermission> VIPMaxHomes { get; set; }
@@ -28,6 +29,7 @@ namespace RestoreMonarchy.MoreHomes
             TeleportHeight = 0.5f;
             CancelOnMove = true;
             MoveMaxDistance = 0.5f;
+            BlockUnderground = false;
 
             VIPCooldowns = new List<VIPPermission>()
             {

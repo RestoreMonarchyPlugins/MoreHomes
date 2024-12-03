@@ -107,6 +107,17 @@ namespace RestoreMonarchy.MoreHomes.Commands
                 if (!ValitedateRaidAndCombat(player))
                     return false;
             }
+                        
+            if (pluginInstance.Configuration.Instance.BlockUnderground)
+            {
+                Vector3 position = home.LivePosition;
+                float height = LevelGround.getHeight(position);
+                if (height > position.y)
+                {
+                    pluginInstance.SendMessageToPlayer(player, "CantTeleportToBedUnderground", home.Name);
+                    return false;
+                }
+            }
             return true;
         }
 
