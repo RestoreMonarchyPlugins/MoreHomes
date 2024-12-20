@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using RestoreMonarchy.MoreHomes.Helpers;
 using SDG.Unturned;
 using System.Reflection;
 using UnityEngine;
@@ -36,39 +37,47 @@ namespace RestoreMonarchy.MoreHomes.Models
         public void Claim(Player player)
         {
             if (InteractableBed == null)
+            {
                 return;
+            }
 
             if (!BarricadeManager.tryGetRegion(InteractableBed.transform, out byte x, out byte y, out ushort plant, out BarricadeRegion region))
+            {
                 return;
+            }
 
-            typeof(BarricadeManager).GetMethod("ServerSetBedOwnerInternal", BindingFlags.Static | BindingFlags.NonPublic)
-                .Invoke(null, new object[] {
-                    InteractableBed, 
-                    x, 
-                    y, 
-                    plant, 
-                    region, 
-                    player.channel.owner.playerID.steamID
-                });
+            ReflectionHelper.ServerSetBedOwnerInternal(InteractableBed, x, y, plant, region, player.channel.owner.playerID.steamID);
         }
 
         public void Unclaim()
         {
             if (InteractableBed == null)
+            {
                 return;
+            }   
 
             BarricadeManager.ServerUnclaimBed(InteractableBed);
         }
 
         public void Destroy()
         {
+            if (InteractableBed == null)
+            {
+                return;
+            }
+
             BarricadeDrop drop = BarricadeManager.FindBarricadeByRootTransform(InteractableBed.transform);
             if (drop == null)
+            {
                 return;
-
+            }
+            
             if (!BarricadeManager.tryGetRegion(InteractableBed.transform, out byte x, out byte y, out ushort plant, out _))
+            {
                 return;
+            }
 
+            Unclaim();
             BarricadeManager.destroyBarricade(drop, x, y, plant);
         }
     }

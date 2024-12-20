@@ -4,12 +4,12 @@
 		<TargetFramework>net48</TargetFramework>
 		<LangVersion>latest</LangVersion>
 		<RootNamespace>RestoreMonarchy.MoreHomes</RootNamespace>
-		<Version>1.10.2</Version>
+		<Version>1.10.3</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
 	  <PackageReference Include="Lib.Harmony" Version="2.2.2" />
-	  <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.24.6" ExcludeAssets="runtime" />
+	  <PackageReference Include="RestoreMonarchy.RocketRedist" Version="3.24.7.1" ExcludeAssets="runtime" />
 	</ItemGroup>
 
 	<ItemGroup>

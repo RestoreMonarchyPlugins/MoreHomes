@@ -1,20 +1,24 @@
 ﻿using HarmonyLib;
-using SDG.Unturned;
-using Steamworks;
-using System;
 using RestoreMonarchy.MoreHomes.Helpers;
 using RestoreMonarchy.MoreHomes.Models;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
+using SDG.Unturned;
+using Steamworks;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
-	[HarmonyPatch(typeof(InteractableBed), "ReceiveClaimRequest")]
-    class InteractableBed_ReceiveClaimRequest_Patch
+    [HarmonyPatch(typeof(InteractableBed))]
+    class InteractableBedPatches
 	{
+		[HarmonyPatch(nameof(InteractableBed.ReceiveClaimRequest))]
         [HarmonyPrefix]
-        static bool ReceiveClaimRequest_Prefix(InteractableBed __instance, in ServerInvocationContext context)
+        static bool ReceiveClaimRequestPrefix(InteractableBed __instance, in ServerInvocationContext context)
         {
+			if (__instance == null)
+			{
+                return false;
+            }
+
 			byte x;
 			byte y;
 			ushort plant;
@@ -41,12 +45,15 @@ namespace RestoreMonarchy.MoreHomes.Patches
 
 			CSteamID steamID = player.channel.owner.playerID.steamID;
 
-			if (__instance != null && __instance.isClaimable && __instance.checkClaim(player.channel.owner.playerID.steamID))
+			if (__instance.isClaimable && __instance.checkClaim(steamID))
 			{
 				if (__instance.isClaimed)
 				{
                     PlayerHome home = HomesHelper.GetPlayerHome(steamID, __instance);
-					HomesHelper.RemoveHome(steamID, home);
+					if (home != null)
+					{
+                        HomesHelper.RemoveHome(steamID, home);
+                    }					
 					home.Unclaim();
 				}
 				else

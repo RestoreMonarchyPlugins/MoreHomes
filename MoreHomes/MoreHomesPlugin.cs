@@ -37,7 +37,7 @@ namespace RestoreMonarchy.MoreHomes
             Instance = this;
             MessageColor = UnturnedChat.GetColorFromName(Configuration.Instance.MessageColor, Color.green);
 
-            PlayerCooldowns = new Dictionary<string, DateTime>();
+            PlayerCooldowns = [];
             
             HarmonyInstance = new Harmony(HarmonyInstanceId);
             HarmonyInstance.PatchAll(Assembly);
@@ -56,7 +56,7 @@ namespace RestoreMonarchy.MoreHomes
 
         protected override void Unload()
         {
-            HarmonyInstance?.UnpatchAll(HarmonyInstanceId);
+            HarmonyInstance.UnpatchAll(HarmonyInstanceId);
             HarmonyInstance = null;
 
             Destroy(DataService);

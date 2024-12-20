@@ -1,19 +1,17 @@
 ﻿using HarmonyLib;
 using RestoreMonarchy.MoreHomes.Helpers;
-using Rocket.Unturned.Chat;
 using Rocket.Unturned.Player;
 using SDG.Unturned;
-using Steamworks;
 using UnityEngine;
 
 namespace RestoreMonarchy.MoreHomes.Patches
 {
     [HarmonyPatch(typeof(BarricadeManager))]
-    class BarricadeManager_destroyBarricade_Patch
+    class BarricadeManagerPatches
     {
-        [HarmonyPatch("salvageBarricade")]
+        [HarmonyPatch(nameof(BarricadeManager.salvageBarricade))]
         [HarmonyPrefix]
-        static void salvageBarricade_Prefix(Transform transform)
+        static void salvageBarricadePrefix(Transform transform)
         {
             InteractableBed interactableBed = transform.GetComponent<InteractableBed>();
             if (interactableBed != null)
@@ -28,7 +26,7 @@ namespace RestoreMonarchy.MoreHomes.Patches
 
         [HarmonyPatch("destroyBarricade", typeof(BarricadeDrop), typeof(byte), typeof(byte), typeof(ushort))]
         [HarmonyPrefix]
-        static void destroyBarricade_Prefix(BarricadeDrop barricade, byte x, byte y, ushort plant)
+        static void destroyBarricadePrefix(BarricadeDrop barricade, byte x, byte y, ushort plant)
         {
             InteractableBed interactableBed = barricade.interactable as InteractableBed;
             if (interactableBed != null)
