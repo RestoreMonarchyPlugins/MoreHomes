@@ -1,33 +1,29 @@
 # MoreHomes
-Allow players to claim and teleport to multiple beds. 
+
+A plugin for Unturned that allows players to claim and teleport to multiple beds.
 
 ## Features
-* Allow players to claim multiple beds
-* Cooldown and delay system for home teleportation
-* Cancel teleportation if the player moves
-* Integrates with Telepoertation plugin for Combat and Raid mode checks
-* VIP permission system for cooldown, delay, and max homes
-* As of version **v1.9.0,** `MoreHomesData.json` is stored in the map level data folder instead of the plugin directory
+- Claim multiple beds as homes
+- Teleport to your homes with simple commands
+- Configurable cooldown and delay system
+- Teleportation cancels if player moves
+- Works with Teleportation plugin to check combat and raid status
+- VIP system for special cooldowns, delays, and home limits
 
 ## Commands
-### Player
-* **/home** – Teleport to the first home in the list
-* **/home \<name\>** – Teleport to the home with the given name
-* **/homes** – Lists all your homes
-* **/destroyhome \<name\>** – Removes the home with the given name
-* **/renamehome \<name\> \<new_name\>** – Renames the home with the given name
-### Admin/Console
-* **/restorehomes** - Collects all the homes from the map and restores them to `MoreHomesData.json`
 
-## Player Permissions
-```xml
-<Permission Cooldown="0">home</Permission>
-<Permission Cooldown="0">homes</Permission>
-<Permission Cooldown="0">destroyhome</Permission>
-<Permission Cooldown="0">renamehome</Permission>
-```
+### Player Commands
+- `/home` - Teleport to your first home
+- `/home <name>` - Teleport to a specific home
+- `/homes` - List all your homes
+- `/destroyhome <name>` - Delete a home
+- `/renamehome <name> <new_name>` - Rename a home
+
+### Admin Commands
+- `/restorehomes` - Rebuild homes database from all beds on the map (console only)
 
 ## Configuration
+
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <MoreHomesConfiguration xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -55,33 +51,43 @@ Allow players to claim and teleport to multiple beds.
 </MoreHomesConfiguration>
 ```
 
-## Translations
+### Configuration Options
+
+- `MessageColor` - Color of plugin messages to players
+- `MessageIconUrl` - URL of the icon shown in messages
+- `DefaultHomeCooldown` - Seconds players must wait between using home teleport
+- `DefaultHomeDelay` - Seconds players must wait before teleportation happens
+- `DefaultMaxHomes` - Maximum number of homes a player can have
+- `TeleportHeight` - Height offset when teleporting to a bed
+- `CancelOnMove` - Whether teleportation should cancel if player moves
+- `MoveMaxDistance` - How far a player can move before teleport cancels
+- `BlockUnderground` - Prevent teleporting to beds located underground
+
+## VIP System
+
+The VIP system uses permission tags to give players special benefits:
+
+- `VIPCooldowns` - Custom cooldown times for VIP players
+- `VIPDelays` - Custom delay times for VIP players
+- `VIPMaxHomes` - Custom maximum home limits for VIP players
+
+Each VIP setting contains:
+- `PermissionTag` - The permission node that players need to have
+- `Value` - The numeric value for that permission
+
+For example:
+- `<VIPPermission PermissionTag="morehomes.vip" Value="3" />` in VIPMaxHomes means players with "morehomes.vip" permission can have 3 homes
+- `<VIPPermission PermissionTag="morehomes.star" Value="5" />` in VIPCooldowns means players with "morehomes.star" permission have a 5 second cooldown
+
+The plugin always uses the best value for the player:
+- For cooldowns and delays: the lowest value from applicable permissions
+- For max homes: the highest value from applicable permissions
+
+## Player Permissions
+
 ```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Translations xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <Translation Id="HomeCooldown" Value="Please wait [[b]]{0}[[/b]] seconds before using home again" />
-  <Translation Id="HomeDelayWarn" Value="You will be teleported to your home [[b]]{0}[[/b]] in seconds" />
-  <Translation Id="MaxHomesWarn" Value="You have reached the maximum number of beds" />
-  <Translation Id="BedDestroyed" Value="Home unavailable: bed destroyed or unclaimed. Teleportation canceled" />
-  <Translation Id="WhileDriving" Value="You can't teleport while driving" />
-  <Translation Id="NoHome" Value="No matching home found for teleportation" />
-  <Translation Id="HomeSuccess" Value="You were teleported to [[b]]{0}[[/b]] home" />
-  <Translation Id="HomeList" Value="Your homes [[b]][{0}/{1}][[/b]]: " />
-  <Translation Id="NoHomes" Value="You don't have any claimed beds" />
-  <Translation Id="DestroyHomeFormat" Value="Usage: /destroyhome [[name]]" />
-  <Translation Id="HomeNotFound" Value="No home found with the name [[b]]{0}[[/b]]" />
-  <Translation Id="DestroyHomeSuccess" Value="Home [[b]]{0}[[/b]] has been removed" />
-  <Translation Id="RenameHomeFormat" Value="Usage: /renamehome [[current name]] [[new name]]" />
-  <Translation Id="HomeAlreadyExists" Value="You already have home with the name [[b]]{0}[[/b]]" />
-  <Translation Id="RenameHomeSuccess" Value="Home renamed from [[b]]{0}[[/b]] to [[b]]{1}[[/b]]" />
-  <Translation Id="WhileRaid" Value="You can't teleport while in raiding mode" />
-  <Translation Id="WhileCombat" Value="You can't teleport while in combat mode" />
-  <Translation Id="RestoreHomesSuccess" Value="[[b]]{0}[[/b]] homes have been restored" />
-  <Translation Id="RemoveHome" Value="Your [[b]]{0}[[/b]] home has been removed" />
-  <Translation Id="HomeClaimed" Value="New home claimed with the name [[b]]{0}[[/b]]" />
-  <Translation Id="HomeTeleportationFailed" Value="Failed to teleport to [[b]]{0}[[/b]] home" />
-  <Translation Id="HomeDestroyed" Value="Your [[b]]{0}[[/b]] home was destroyed" />
-  <Translation Id="HomeCanceledYouMoved" Value="Home teleportation canceled because you moved" />
-  <Translation Id="CantTeleportToBedUnderground" Value="You can't teleport to [[b]]{0}[[/b]] home, because it's underground." />
-</Translations>
+<Permission Cooldown="0">home</Permission>
+<Permission Cooldown="0">homes</Permission>
+<Permission Cooldown="0">destroyhome</Permission>
+<Permission Cooldown="0">renamehome</Permission>
 ```
